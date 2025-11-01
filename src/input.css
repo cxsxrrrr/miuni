@@ -2,3 +2,41 @@
 @import "tailwindcss";
 
 /* Add custom project styles below */
+/* CSS custom properties for the project color palette */
+@layer base {
+	:root {
+		--valencia: #d83330;
+		--paarl: #965626;
+		--danube: #7da7d7;
+		--harvest-gold: #e1ab70;
+		--english-walnut: #372721;
+		--aqua-forest: #5eaa8a;
+		--alizarin-crimson: #e52520;
+		--spice: #6c412e;
+		--quicksand: #c29e8d;
+	}
+}
+
+/* Global font override: use Arial Rounded MT Bold across the project (with fallbacks) */
+@layer base {
+	body {
+		font-family: "Arial Rounded MT Bold", Arial, Helvetica, sans-serif;
+	}
+}
+
+/* Generate a few utility classes from the CSS custom properties as a fallback
+	 so the project can use the palette with simple class names. */
+@layer utilities {
+	.bg-valencia { background-color: var(--valencia); }
+	.bg-paarl { background-color: var(--paarl); }
+	.bg-danube { background-color: var(--danube); }
+	.bg-harvest-gold { background-color: var(--harvest-gold); }
+	.bg-english-walnut { background-color: var(--english-walnut); }
+	.bg-aqua-forest { background-color: var(--aqua-forest); }
+	.bg-alizarin-crimson { background-color: var(--alizarin-crimson); }
+	.bg-spice { background-color: var(--spice); }
+	.bg-quicksand { background-color: var(--quicksand); }
+
+	.text-valencia { color: var(--valencia); }
+	.hover\:bg-alizarin-crimson:hover { background-color: var(--alizarin-crimson); }
+}
