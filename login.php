@@ -11,12 +11,6 @@
     <!-- Registration card -->
     <div class="min-h-screen flex items-center justify-center"> 
         <form action="./auth/login.php" method="post" class="max-w-md mx-auto p-6">
-            <label class="block text-sm font-medium text-gray-700" for="name">Nombre:</label>
-            <input type="text" id="name" name="name" required>
-            <br>
-            <label for="lastname">Apellido:</label>
-            <input type="text" id="lastname" name="lastname" required>
-        <br>
         <label for="email">Correo Electrónico:</label>
         <input type="email" id="email" name="email" required>
         <br>
