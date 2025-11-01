@@ -30,17 +30,37 @@ try {
 	$stmt->execute([':email' => $email]);
 	$user = $stmt->fetch();
 
-	if (!$user || !password_verify($password, $user['password'])) {
-		// Credenciales inválidas
+	if (!$user) {
 		header('Location: ../login.php?error=cred');
 		exit;
 	}
 
-	// Opcional: reforzar hash si el algoritmo cambió
-	if (password_needs_rehash($user['password'], PASSWORD_DEFAULT)) {
-		$newHash = password_hash($password, PASSWORD_DEFAULT);
-		$upd = $pdo->prepare('UPDATE usuarios SET password = :p WHERE usuario_id = :id');
-		$upd->execute([':p' => $newHash, ':id' => $user['usuario_id']]);
+	$stored = (string)$user['password'];
+	$isHash = password_get_info($stored)['algo'] !== 0 || preg_match('/^\$(2y|2a|2b|argon2id|argon2i)\$/', $stored);
+	$valid = false;
+
+	if ($isHash) {
+		// Hash moderno (bcrypt/argon2)
+		$valid = password_verify($password, $stored);
+		if ($valid && password_needs_rehash($stored, PASSWORD_DEFAULT)) {
+			$newHash = password_hash($password, PASSWORD_DEFAULT);
+			$upd = $pdo->prepare('UPDATE usuarios SET password = :p WHERE usuario_id = :id');
+			$upd->execute([':p' => $newHash, ':id' => $user['usuario_id']]);
+		}
+	} else {
+		// Compatibilidad legacy: contraseña almacenada en texto plano
+		if (hash_equals($stored, $password)) {
+			$valid = true;
+			// Migración transparente a hash seguro
+			$newHash = password_hash($password, PASSWORD_DEFAULT);
+			$upd = $pdo->prepare('UPDATE usuarios SET password = :p WHERE usuario_id = :id');
+			$upd->execute([':p' => $newHash, ':id' => $user['usuario_id']]);
+		}
+	}
+
+	if (!$valid) {
+		header('Location: ../login.php?error=cred');
+		exit;
 	}
 
 	// Autenticated: set session
