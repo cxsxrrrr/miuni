@@ -1,5 +1,7 @@
 /* Using import form for Tailwind CLI (alternative to @tailwind directives) */
 @import "tailwindcss";
+/* Friendly UI font (Poppins) - falls back to system fonts if Google Fonts blocked */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
 /* Add custom project styles below */
 /* CSS custom properties for the project color palette */
@@ -18,10 +20,44 @@
 	}
 }
 
-/* Global font override: use Arial Rounded MT Bold across the project (with fallbacks) */
+/* Global font & typographic rules: use Poppins for a friendlier UI and tie headings/colors to palette */
 @layer base {
 	body {
-		font-family: "Arial Rounded MT Bold", Arial, Helvetica, sans-serif;
+		font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+		color: var(--english-walnut);
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+
+	/* Headings use the warm walnut color and slightly heavier weight for friendliness */
+	h1, h2, h3, h4 {
+		color: var(--english-walnut);
+		font-weight: 600;
+		line-height: 1.15;
+	}
+
+	/* Inputs and buttons inherit the friendly font */
+	input, button, select, textarea {
+		font-family: inherit;
+	}
+}
+
+/* A simple component helper for primary buttons using the palette */
+@layer components {
+		.btn-primary {
+			@apply inline-flex items-center justify-center px-4 py-2 rounded-md font-semibold text-white;
+			/* Use Danube (soft blue) as primary to avoid strong reds */
+			background-color: var(--danube);
+			box-shadow: 0 6px 18px rgba(125,167,215,0.12);
+		}
+		.btn-primary:hover {
+			/* Gentle shift to aqua-forest on hover for approachable feel */
+			background-color: var(--aqua-forest);
+		}
+	.btn-ghost {
+		@apply inline-flex items-center justify-center px-4 py-2 rounded-md font-medium;
+		background: transparent;
+		color: var(--english-walnut);
 	}
 }
 
@@ -37,6 +73,18 @@
 	.bg-alizarin-crimson { background-color: var(--alizarin-crimson); }
 	.bg-spice { background-color: var(--spice); }
 	.bg-quicksand { background-color: var(--quicksand); }
+    .bg-background { background-color: var(--background); }
+
+	/* Text utility for walnut tone */
+	.text-english-walnut { color: var(--english-walnut); }
+
+		/* Hero background from external SVG file (full-viewport decorative background) */
+		.hero-bg {
+			background-image: url('./assets/svg/bg-login.svg');
+			background-size: cover;
+			background-position: right center;
+			background-repeat: no-repeat;
+		}
 
 	.text-valencia { color: var(--valencia); }
 	.hover\:bg-alizarin-crimson:hover { background-color: var(--alizarin-crimson); }
