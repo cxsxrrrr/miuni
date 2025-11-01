@@ -11,7 +11,7 @@
 
             <div class="w-1/2 min-h-screen bg-white flex items-center justify-center shadow-lg" style="border-top-right-radius:2rem; border-bottom-right-radius:2rem; overflow:hidden; background-image: url('./assets/svg/sidebar-login.svg'); background-repeat: no-repeat; background-position: left top; background-size: cover;">
                 <!-- Inner login card: occupy only necessary width, keep comfortable padding -->
-                <div class="bg-white rounded-2xl shadow-lg px-10 py-12">
+                <div class="bg-white rounded-2xl shadow-lg px-10 py-12 w-full max-w-xl md:max-w-3xl">
 
                     <h2 class="text-2xl font-extrabold text-english-walnut mb-6">Iniciar sesión</h2>
 
