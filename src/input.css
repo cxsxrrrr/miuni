@@ -1,0 +1,4 @@
+/* Using import form for Tailwind CLI (alternative to @tailwind directives) */
+@import "tailwindcss";
+
+/* Add custom project styles below */

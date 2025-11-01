@@ -1,0 +1,16 @@
+{
+  "name": "miuni",
+  "version": "1.0.0",
+  "private": true,
+  "description": "MiUni Kids Matemáticas - Tailwind setup",
+  "scripts": {
+    "build:css": "tailwindcss -i ./src/input.css -o ./index.css --config ./tailwind.config.cjs --minify",
+    "dev:css": "tailwindcss -i ./src/input.css -o ./index.css --config ./tailwind.config.cjs --watch"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.16",
+    "autoprefixer": "10.4.0",
+    "postcss": "8.4.0",
+    "tailwindcss": "4.1.0"
+  }
+}

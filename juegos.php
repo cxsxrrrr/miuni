@@ -4,10 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MiUni Kids Matemáticas | Juegos</title>
+    <link rel="stylesheet" href="index.css">
 </head>
-<body>
-    <h1>Juegos de Matemáticas</h1>
-    <p>¡Diviértete aprendiendo matemáticas con nuestros juegos interactivos!</p>
+<body class="min-h-screen bg-gradient-to-b from-sky-50 to-white">
+    <main class="max-w-3xl mx-auto p-6">
+      <h1 class="text-3xl font-extrabold text-sky-800 mb-4">Juegos de Matemáticas</h1>
+      <p class="text-gray-700">¡Diviértete aprendiendo matemáticas con nuestros juegos interactivos!</p>
+    </main>
 
     <script>
         (function() {
