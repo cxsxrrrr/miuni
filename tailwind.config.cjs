@@ -8,6 +8,7 @@ module.exports = {
     './js/**/*.js'
   ],
   safelist: [
+    { pattern: /^animate-/ },
     { pattern: /^(bg|text)-(valencia|paarl|danube|harvest-gold|english-walnut|aqua-forest|alizarin-crimson|spice|quicksand)$/ },
     { pattern: /^hover:bg-(valencia|alizarin-crimson|paarl|danube|harvest-gold|english-walnut|aqua-forest|spice|quicksand)$/ }
 
