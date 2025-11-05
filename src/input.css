@@ -2,6 +2,7 @@
 @import "tailwindcss";
 /* Friendly UI font (Poppins) - falls back to system fonts if Google Fonts blocked */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+@plugin '@midudev/tailwind-animations';
 
 /* Add custom project styles below */
 /* CSS custom properties for the project color palette */

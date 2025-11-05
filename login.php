@@ -12,7 +12,11 @@
         .auth-card { width: 100%; max-width: 36rem; }
         html { background-color: #ffffff; }
         /* Rounded background only on desktop */
-        body.hero-bg { background-clip: padding-box; }
+    body.hero-bg { background-clip: padding-box; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+    .mascot-speech-trigger { position: absolute; border: 0; background: transparent; padding: 0; cursor: pointer; }
+    .mascot-speech-trigger:focus { outline: none; }
+    .mascot-speech-trigger:focus-visible { outline: 3px solid rgba(33, 150, 243, 0.65); border-radius: 1rem; }
         /* Glassmorphism card */
         .auth-card .card-inner {
             background: linear-gradient(135deg, rgba(255,255,255,0.38), rgba(255,255,255,0.22));
@@ -57,15 +61,20 @@
                 /* Optional: blur the backdrop a bit for a glassy side panel without affecting the mascot */
                 backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
             }
-            .auth-aside img { max-width: 90%; max-height: 90%; height: auto; width: auto; object-fit: contain; display: block; }
+            .auth-aside .mascot-image { max-width: 90%; max-height: 90%; height: auto; width: auto; object-fit: contain; display: block; }
+            .mascot-wrapper { position: relative; display: inline-block; }
+            .mascot-speech-trigger { inset: 0; width: 100%; height: 100%; border-radius: 1rem; z-index: 5; }
+            .speech-bubble { position: absolute; top: 14%; left: 65%; transform: translate(-50%, -60%); width: clamp(220px, 28vw, 320px); }
+            .speech-bubble img { width: 100%; height: auto; display: block; }
+            .speech-bubble__text { position: absolute; inset: 25% 20% 38% 12%; display: flex; align-items: center; justify-content: center; text-align: center; font-size: clamp(0.75rem, 1.1vw, 1rem); line-height: 1.4; color: #372721; font-weight: 500; }
         }
     </style>
-</head>
+</head> 
 <body class="bg-background hero-bg min-h-screen">
     <div class="auth-wrapper">
         <!-- Card column -->
         <div class="auth-card">
-            <div class="card-inner">
+            <div class="card-inner animate-pulse-fade-in">
                 <?php if (isset($_GET['error'])): ?>
                     <?php
                         $msg = '';
@@ -90,7 +99,7 @@
 
                     <div>
                         <label for="password" class="block text-sm font-medium text-gray-700">Contraseña</label>
-                        <input type="password" id="password" name="password" required class="mt-1 block w-full rounded border border-gray-200 px-3 py-2 shadow-sm" />
+                        <input type="password" id="password" name="password" required autocomplete="new-password" class="mt-1 block w-full rounded border border-gray-200 px-3 py-2 shadow-sm" />
                     </div>
 
                     <div>
@@ -104,12 +113,20 @@
             </div>
         </div>
 
-        <!-- Decorative aside column (only on desktop) -->
         <div class="auth-aside" aria-hidden="true">
-            <img src="./assets/mascota_mirrored.png" alt="Mascota MiUni" />
+            <div class="mascot-wrapper">
+                <img src="./assets/mascota_mirrored.png" alt="Mascota MiUni" class="animate-slide-in-top mascot-image">
+                <button type="button" class="mascot-speech-trigger" aria-label="Reproducir mensaje de bienvenida">
+                    <span class="sr-only">Reproducir mensaje de bienvenida</span>
+                </button>
+                <div class="speech-bubble animate-scale">
+                    <img src="./assets/images/nube.png" alt="Mensaje de la mascota">
+                    <div class="speech-bubble__text">¡Bienvenido a MiUni Kids Matemáticas!</div>
+                </div>
+            </div>
         </div>
     </div>
 
-
+    <script src="./js/speech.js"></script>
 </body>
 </html>

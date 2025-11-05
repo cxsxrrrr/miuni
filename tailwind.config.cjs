@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+const animations = require('@midudev/tailwind-animations');
+
 module.exports = {
   content: [
     './**/*.php',
@@ -8,6 +10,7 @@ module.exports = {
   safelist: [
     { pattern: /^(bg|text)-(valencia|paarl|danube|harvest-gold|english-walnut|aqua-forest|alizarin-crimson|spice|quicksand)$/ },
     { pattern: /^hover:bg-(valencia|alizarin-crimson|paarl|danube|harvest-gold|english-walnut|aqua-forest|spice|quicksand)$/ }
+
   ],
   theme: {
     extend: {
@@ -29,5 +32,7 @@ module.exports = {
       }
     },
   },
-  plugins: [],
+  plugins: [
+    animations
+  ],
 }
