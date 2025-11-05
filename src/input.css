@@ -1,7 +1,7 @@
-/* Using import form for Tailwind CLI (alternative to @tailwind directives) */
-@import "tailwindcss";
 /* Friendly UI font (Poppins) - falls back to system fonts if Google Fonts blocked */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+/* Using import form for Tailwind CLI (alternative to @tailwind directives) */
+@import "tailwindcss";
 
 /* Add custom project styles below */
 /* CSS custom properties for the project color palette */
@@ -59,6 +59,47 @@
 		background: transparent;
 		color: var(--english-walnut);
 	}
+
+	.nav-link {
+		@apply inline-flex items-center justify-center px-4 py-1.5 rounded-full text-sm font-medium transition;
+		background: transparent;
+		color: rgba(255,255,255,0.8);
+		border: 0;
+	}
+
+	.nav-link:hover,
+	.nav-link:focus-visible {
+		color: rgba(255,255,255,0.95);
+		outline: none;
+	}
+
+	.nav-link--active {
+		background: rgba(255,255,255,0.22);
+		color: #ffffff;
+	}
+
+	.carousel-dots {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.625rem;
+	}
+
+	.carousel-dot {
+		width: 0.65rem;
+		height: 0.65rem;
+		border-radius: 9999px;
+		background: rgba(255,255,255,0.35);
+		opacity: 0.7;
+		transform: scale(1);
+		transition: transform 0.25s ease, opacity 0.25s ease, background-color 0.25s ease;
+	}
+
+	.carousel-dot--active {
+		background: rgba(255,255,255,0.95);
+		opacity: 1;
+		transform: scale(1.3);
+		animation: indicator-pop 0.25s ease-out;
+	}
 }
 
 /* Generate a few utility classes from the CSS custom properties as a fallback
@@ -86,6 +127,14 @@
 			background-repeat: no-repeat;
 		}
 
+		/* Index landing background */
+		.index-bg {
+			background-image: url('./assets/svg/bg-index.svg');
+			background-size: cover;
+			background-position: center top;
+			background-repeat: no-repeat;
+		}
+
 	.text-valencia { color: var(--valencia); }
 	.hover\:bg-alizarin-crimson:hover { background-color: var(--alizarin-crimson); }
 
@@ -109,4 +158,22 @@
 	.animate-pulse-fade-in { animation: pulse-fade-in 0.6s ease-out both; }
 	.animate-slide-in-top { animation: slide-in-top 0.6s ease-out both; }
 	.animate-scale { animation: scale 0.6s ease-out both; }
+
+	@keyframes content-slide-out {
+		0% { opacity: 1; transform: translateX(0); }
+		100% { opacity: 0; transform: translateX(-32px); }
+	}
+
+	@keyframes content-slide-in {
+		0% { opacity: 0; transform: translateX(32px); }
+		100% { opacity: 1; transform: translateX(0); }
+	}
+
+	.animate-content-out { animation: content-slide-out 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+	.animate-content-in { animation: content-slide-in 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+
+	@keyframes indicator-pop {
+		0% { transform: scale(0.8); opacity: 0.6; }
+		100% { transform: scale(1.3); opacity: 1; }
+	}
 }
