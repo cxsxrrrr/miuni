@@ -1,16 +1,18 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="overflow-x-hidden">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>MiUni Kids Matemáticas | Portal</title>
   <link rel="stylesheet" href="index.css">
 </head>
-<body class="font-sans index-bg min-h-screen text-white antialiased overflow-hidden">
+<body class="font-sans index-bg min-h-screen text-white antialiased overflow-x-hidden">
   <div class="min-h-screen flex flex-col bg-gradient-to-r from-[#f5e9df]/60 via-[#c48a63]/70 to-[#885a44]/80">
     <header class="max-w-6xl w-full mx-auto px-4 md:px-6 pt-6 md:pt-8">
       <nav class="flex items-center justify-between gap-4">
-        <span class="text-xl font-semibold tracking-wide text-white/80">LOGO</span>
+        <a href="index.php" class="inline-flex items-center flex-shrink-0 text-white" aria-label="MiUni Kids">
+          <span class="text-lg md:text-xl font-semibold tracking-wide">MiUniKids</span>
+        </a>
         <ul class="hidden md:flex items-center gap-6">
           <li><button type="button" class="nav-link nav-link--active" data-section="home">Home</button></li>
           <li><button type="button" class="nav-link" data-section="pricing">Pricing</button></li>
@@ -38,15 +40,15 @@
     </header>
 
     <main class="flex-1 flex items-center justify-center">
-      <div class="relative max-w-6xl w-full mx-auto px-4 md:px-6 py-12 md:py-16">
+      <div class="relative max-w-6xl w-full mx-auto px-4 md:px-6 py-12 md:py-16 overflow-hidden">
         <div class="pointer-events-none absolute -z-10 left-1/2 top-1/2 h-[420px] w-[420px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/10 blur-3xl sm:h-[520px] sm:w-[520px]"></div>
-  <div class="grid w-full place-items-center md:place-items-stretch md:items-center gap-12 md:gap-14 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
+        <div class="grid w-full place-items-center md:place-items-stretch md:items-center gap-12 md:gap-14 md:grid-cols-2">
           <div class="order-last md:order-first flex justify-center md:justify-start">
             <img src="./assets/images/teacher.png" alt="Profesor explicando matemática" class="max-w-[320px] sm:max-w-[380px] md:max-w-[420px] w-full h-auto drop-shadow-xl" loading="lazy">
 
           </div>
 
-          <div id="heroContent" class="w-full space-y-8 text-white/90 text-center md:text-left">
+          <div id="heroContent" class="w-full max-w-xl space-y-8 text-white/90 text-center md:text-left mx-auto md:mx-0 overflow-hidden">
             <div class="space-y-5">
               <p id="heroEyebrow" class="uppercase tracking-[0.4em] text-white/70 text-xs sm:text-sm">Aprende</p>
               <h1 id="heroTitle" class="text-5xl sm:text-6xl md:text-7xl font-extrabold leading-tight">MATEMÁTICAS</h1>

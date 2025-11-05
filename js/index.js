@@ -30,7 +30,7 @@ const contentMap = {
   },
   services: {
     eyebrow: 'Servicios',
-    title: 'ACOMPAÑAMIENTO EXPERTO',
+    title: 'MENTORÍA DIDÁCTICA',
     subtitle: 'Mentores certificados',
     description:
       'Mentores certificados acompañan cada lección con sesiones en vivo, correcciones personalizadas y comunicación directa con familias.',
