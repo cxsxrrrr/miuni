@@ -1,3 +1,11 @@
+<?php
+session_start();
+$serverErrors = $_SESSION['register_errors'] ?? [];
+$old = $_SESSION['register_old'] ?? [];
+$registered = $_SESSION['registered'] ?? false;
+// limpiar flash
+unset($_SESSION['register_errors'], $_SESSION['register_old'], $_SESSION['registered']);
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -7,9 +15,7 @@
 
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* ensure backdrop-filter works on some browsers when using CDN */
     .backdrop-blur-support { -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
-    /* fallback background color for older browsers */
     .glass-bg { background: rgba(255,255,255,0.06); }
 
     /* Raining signs placed al lado de las tarjetas */
@@ -111,22 +117,41 @@
 
           <h1 id="registro-title" class="relative text-2xl font-bold text-english-walnut mb-4">Registro de Usuario</h1>
 
+          <?php if (!empty($serverErrors)): ?>
+            <div class="mb-4 p-3 rounded-md bg-red-700/10 border border-red-600 text-red-200">
+              <ul class="list-disc pl-5">
+                <?php foreach ($serverErrors as $err): ?>
+                  <li><?php echo htmlspecialchars($err); ?></li>
+                <?php endforeach; ?>
+              </ul>
+            </div>
+          <?php endif; ?>
+
+          <?php if ($registered): ?>
+            <div class="mb-4 p-3 rounded-md bg-green-700/10 border border-green-600 text-green-200">
+              Registro completado. Puedes iniciar sesión ahora.
+            </div>
+          <?php endif; ?>
+
           <form action="/miuni/auth/register.php" method="post" id="registro-form" class="relative space-y-4">
             <div>
-              <label for="first_name" class="block text-sm font-medium text-english-walnut">Nombre</label>
-              <input id="first_name" name="first_name" required
+              <label for="nombre" class="block text-sm font-medium text-english-walnut">Nombre</label>
+              <input id="nombre" name="nombre" required
+                value="<?php echo htmlspecialchars($old['nombre'] ?? ''); ?>"
                 class="mt-1 block w-full rounded-xl border border-white/20 bg-white/6 text-english-walnut placeholder-gray-200 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-danube focus:bg-white/20 transition" />
             </div>
 
             <div>
-              <label for="last_name" class="block text-sm font-medium text-english-walnut">Apellido</label>
-              <input id="last_name" name="last_name" required
+              <label for="apellido" class="block text-sm font-medium text-english-walnut">Apellido</label>
+              <input id="apellido" name="apellido" required
+                value="<?php echo htmlspecialchars($old['apellido'] ?? ''); ?>"
                 class="mt-1 block w-full rounded-xl border border-white/20 bg-white/6 text-english-walnut placeholder-gray-200 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-danube focus:bg-white/20 transition" />
             </div>
 
             <div>
               <label for="email" class="block text-sm font-medium text-english-walnut">Correo Electrónico</label>
               <input id="email" type="email" name="email" required
+                value="<?php echo htmlspecialchars($old['email'] ?? ''); ?>"
                 class="mt-1 block w-full rounded-xl border border-white/20 bg-white/6 text-english-walnut placeholder-gray-200 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-danube focus:bg-white/20 transition" />
             </div>
 
