@@ -14,7 +14,34 @@ try {
   $tipoId = $tipoStmt->fetchColumn();
 
   if ($tipoId === false) {
-    throw new RuntimeException('El tipo de operación "suma" no está configurado.');
+    $startedTransaction = !$pdo->inTransaction();
+    if ($startedTransaction) {
+      $pdo->beginTransaction();
+    }
+
+    try {
+      $insertTipo = $pdo->prepare('INSERT INTO tipos_operacion (nombre) VALUES (:nombre)');
+      $insertTipo->execute([':nombre' => 'suma']);
+      $tipoId = (int)$pdo->lastInsertId();
+      if ($startedTransaction) {
+        $pdo->commit();
+      }
+    } catch (PDOException $insertException) {
+      if ($startedTransaction && $pdo->inTransaction()) {
+        $pdo->rollBack();
+      }
+      // Si otro proceso ya lo creó, volvemos a consultarlo.
+      if ((int)($insertException->errorInfo[1] ?? 0) === 1062) {
+        $tipoStmt->execute([':nombre' => 'suma']);
+        $tipoId = $tipoStmt->fetchColumn();
+      } else {
+        throw $insertException;
+      }
+    }
+
+    if ($tipoId === false) {
+      throw new RuntimeException('No se pudo registrar el tipo de operación "suma".');
+    }
   }
 
   $tipoId = (int)$tipoId;
