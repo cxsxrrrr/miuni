@@ -1,4 +1,9 @@
 <?php
+declare(strict_types=1);
+
+require_once __DIR__ . '/includes/auth_guard.php';
+require_login();
+
 // simple listado de ejercicios
 ?>
 <!doctype html>
@@ -17,7 +22,7 @@
     </header>
 
     <section class="grid gap-6 grid-cols-1 sm:grid-cols-2">
-      <a href="suma.php" class="block rounded-xl p-6 bg-white shadow hover:scale-105 transition transform">
+      <a href="sumas.php" class="block rounded-xl p-6 bg-white shadow hover:scale-105 transition transform">
         <h2 class="text-xl font-bold text-sky-800">Suma: 5 dígitos + 2 cifras</h2>
         <p class="mt-2 text-sm text-gray-600">Practica sumas con números grandes, paso a paso.</p>
       </a>

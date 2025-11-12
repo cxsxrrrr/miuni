@@ -1,7 +1,60 @@
 document.addEventListener('DOMContentLoaded', () => {
   const palette = document.getElementById('number-palette');
-  const slots = Array.from(document.querySelectorAll('#board-wrap .slot'));
+  const board = document.getElementById('board');
+  const slots = Array.from(document.querySelectorAll('#board-wrap .slot[data-slot^="b"]'));
   const digits = Array.from(document.querySelectorAll('#number-palette .digit'));
+
+  if (!palette || !board) {
+    return;
+  }
+
+  const makePlacedDigit = value => {
+    const val = String(value);
+    const src = Array.from(palette.querySelectorAll('.digit')).find(d => (d.dataset.value || d.alt || '') === val);
+    if (!src) return null;
+
+    const clone = src.cloneNode(true);
+    const iid = 'i' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+    clone.setAttribute('data-instance-id', iid);
+    clone.setAttribute('data-placed', 'true');
+    clone.draggable = true;
+
+    clone.addEventListener('dragstart', e => {
+      e.dataTransfer.setData('text/instance', iid);
+      e.dataTransfer.setData('text/value', val);
+      clone.classList.add('dragging');
+      try { e.dataTransfer.setDragImage(clone, clone.width / 2, clone.height / 2); } catch (err) {}
+    });
+
+    clone.addEventListener('dragend', () => {
+      clone.classList.remove('dragging');
+    });
+
+    clone.addEventListener('click', () => clone.remove());
+
+    return clone;
+  };
+
+  const clearSlot = slotId => {
+    const slot = document.querySelector(`.slot[data-slot="${slotId}"]`);
+    if (slot) {
+      slot.querySelectorAll('.digit[data-instance-id]').forEach(node => node.remove());
+    }
+  };
+
+  const placeDigit = (slotId, value) => {
+    const slot = document.querySelector(`.slot[data-slot="${slotId}"]`);
+    if (!slot) return;
+    const clone = makePlacedDigit(value);
+    if (!clone) return;
+    const existing = slot.querySelector('.digit[data-instance-id]');
+    if (existing) existing.remove();
+    slot.appendChild(clone);
+  };
+
+  const clearAllSlots = () => {
+    slots.forEach(slot => slot.querySelectorAll('.digit[data-instance-id]').forEach(node => node.remove()));
+  };
 
   // We'll clone digits from palette when placing so the palette remains intact.
   // Use instance ids for placed items so removal/move targets the exact element.
@@ -14,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
       ev.dataTransfer.setData('text/value', val);
       ev.dataTransfer.setData('text/instance', '');
       dragSrcEl = img;
-      try { ev.dataTransfer.setDragImage(img, img.width/2, img.height/2); } catch (e){}
+      try { ev.dataTransfer.setDragImage(img, img.width / 2, img.height / 2); } catch (e) {}
       img.classList.add('dragging');
     });
 
@@ -32,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
     palette.classList.remove('drop-target');
     const instanceId = ev.dataTransfer.getData('text/instance');
     if (instanceId) {
-      const placed = document.querySelector(`#board .digit[data-instance-id="${instanceId}"]`);
+      const placed = board.querySelector(`.digit[data-instance-id="${instanceId}"]`);
       if (placed) placed.remove();
     }
   });
@@ -49,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // If moving an existing placed element
       if (instanceId) {
-        const placed = document.querySelector(`#board .digit[data-instance-id="${instanceId}"]`);
+        const placed = board.querySelector(`.digit[data-instance-id="${instanceId}"]`);
         if (!placed) return;
         const existing = slot.querySelector('.digit[data-instance-id]');
         if (existing) existing.remove();
@@ -59,29 +112,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // If dropping from the palette (value present) clone a new placed digit
       if (value) {
-        const src = Array.from(palette.querySelectorAll('.digit')).find(d => (d.dataset.value||d.alt) == String(value));
-        if (!src) return;
-
-        const clone = src.cloneNode(true);
-        const iid = 'i' + Date.now() + '-' + Math.floor(Math.random()*1000);
-        clone.setAttribute('data-instance-id', iid);
-        clone.setAttribute('data-placed', 'true');
-        clone.draggable = true;
-
-        // placed digits can be dragged (we set instance id on drag)
-        clone.addEventListener('dragstart', e => {
-          e.dataTransfer.setData('text/instance', iid);
-          e.dataTransfer.setData('text/value', value);
-          try { e.dataTransfer.setDragImage(clone, clone.width/2, clone.height/2); } catch (err){}
-        });
-
-        // clicking placed digit removes it
-        clone.addEventListener('click', () => clone.remove());
-
-        const existing = slot.querySelector('.digit[data-instance-id]');
-        if (existing) existing.remove();
-        slot.appendChild(clone);
+        placeDigit(slot.dataset.slot, value);
       }
     });
   });
+
+  window.sumaBoardHelpers = {
+    placeDigit,
+    clearSlot,
+    clearAllSlots
+  };
 });

@@ -1,5 +1,9 @@
 <?php
 declare(strict_types=1);
+
+require_once __DIR__ . '/includes/auth_guard.php';
+require_login();
+
 // Temporary debug endpoint to inspect socket detection and DSN used by the app.
 // Safe: does not print DB password. Remove after debugging.
 

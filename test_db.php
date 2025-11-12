@@ -1,5 +1,9 @@
 <?php
 declare(strict_types=1);
+
+require_once __DIR__ . '/includes/auth_guard.php';
+require_login();
+
 // tools/db_check.php
 // Small, temporary script to test DB connection using the same includes/db.php config.
 // Usage: upload to your server under the project and request it once via browser,
@@ -10,7 +14,7 @@ $logFile = __DIR__ . '/db_check.log';
 
 try {
     // Attempt to reuse the project's DB bootstrap
-    require_once __DIR__ . '/../includes/db.php';
+    require_once __DIR__ . '/includes/db.php';
 
     if (!isset($pdo) || !$pdo instanceof PDO) {
         throw new RuntimeException('PDO instance not available from includes/db.php');
