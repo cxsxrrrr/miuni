@@ -1,7 +1,9 @@
 <?php
 declare(strict_types=1);
-$DB_HOST = '127.0.0.1';
-$DB_PORT = 3307;
+$DB_HOST = getenv('DB_HOST') ?: '127.0.0.1';
+// Allow overriding the port via environment variable (useful for different envs / tunnels).
+// Default to 3306 which is the standard MySQL port.
+$DB_PORT = (int) (getenv('DB_PORT') ?: 3306);
 $DB_NAME = 'grup_miunikids';
 $DB_USER = 'grup_admin';
 $DB_PASS = 'miuni123';
