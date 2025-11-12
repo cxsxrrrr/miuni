@@ -68,6 +68,27 @@ if (!function_exists('miuni_get_ejercicios_sum_column_names')) {
 	}
 }
 
+if (!function_exists('miuni_get_ejercicios_oper_column_names')) {
+	function miuni_get_ejercicios_oper_column_names(PDO $pdo): array
+	{
+		try {
+			$columns = [];
+			$stmt = $pdo->query('SHOW COLUMNS FROM ejercicios_usuario');
+			while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+				$columns[$row['Field']] = true;
+			}
+		} catch (Throwable $e) {
+			miuni_log_error('No se pudo leer columnas legacy de ejercicios_usuario: ' . $e->getMessage());
+			return ['uno' => null, 'dos' => null];
+		}
+
+		return [
+			'uno' => isset($columns['operando_uno']) ? 'operando_uno' : null,
+			'dos' => isset($columns['operando_dos']) ? 'operando_dos' : null,
+		];
+	}
+}
+
 if (!function_exists('miuni_get_or_create_tipo_id')) {
 	function miuni_get_or_create_tipo_id(PDO $pdo, string $nombre): int
 	{
@@ -130,6 +151,16 @@ if (!function_exists('miuni_ensure_ejercicios_schema')) {
 			if (isset($columns['operando_dos']) && !isset($columns['sumando_dos'])) {
 				$pdo->exec('ALTER TABLE ejercicios_usuario CHANGE COLUMN operando_dos sumando_dos INT NOT NULL');
 				miuni_reset_ejercicios_column_cache();
+				$columns = $fetchColumns();
+			}
+
+			// Si las columnas legacy permanecen, garantizar default seguro
+			if (isset($columns['operando_uno'])) {
+				$pdo->exec('ALTER TABLE ejercicios_usuario MODIFY COLUMN operando_uno INT NOT NULL DEFAULT 0');
+				$columns = $fetchColumns();
+			}
+			if (isset($columns['operando_dos'])) {
+				$pdo->exec('ALTER TABLE ejercicios_usuario MODIFY COLUMN operando_dos INT NOT NULL DEFAULT 0');
 				$columns = $fetchColumns();
 			}
 
@@ -220,23 +251,45 @@ if (!function_exists('miuni_ensure_user_exercises')) {
 
 		if ($needed > 0) {
 			$columns = miuni_get_ejercicios_sum_column_names($pdo);
-			$insertSql = sprintf(
-				'INSERT INTO ejercicios_usuario (usuario_id, tipo_id, %1$s, %2$s)
-				 VALUES (:uid, :tid, :uno, :dos)',
-				$columns['uno'],
-				$columns['dos']
-			);
-			$insertStmt = $pdo->prepare($insertSql);
+				$legacyColumns = miuni_get_ejercicios_oper_column_names($pdo);
+				$fields = ['usuario_id', 'tipo_id'];
+				$placeholders = ['?', '?'];
+
+				$fields[] = $columns['uno'];
+				$fields[] = $columns['dos'];
+				$placeholders[] = '?';
+				$placeholders[] = '?';
+
+				$hasLegacyUno = $legacyColumns['uno'] !== null && $legacyColumns['uno'] !== $columns['uno'];
+				$hasLegacyDos = $legacyColumns['dos'] !== null && $legacyColumns['dos'] !== $columns['dos'];
+				if ($hasLegacyUno) {
+					$fields[] = $legacyColumns['uno'];
+					$placeholders[] = '?';
+				}
+				if ($hasLegacyDos) {
+					$fields[] = $legacyColumns['dos'];
+					$placeholders[] = '?';
+				}
+
+				$insertSql = sprintf(
+					'INSERT INTO ejercicios_usuario (%s)
+					 VALUES (%s)',
+					implode(', ', $fields),
+					implode(', ', $placeholders)
+				);
+				$insertStmt = $pdo->prepare($insertSql);
 
 			for ($i = 0; $i < $needed; $i++) {
 				$top = miuni_random_int(10000, 99999);
 				$bottom = miuni_random_int(10, 99);
-				$insertStmt->execute([
-					':uid' => $userId,
-					':tid' => $tipoId,
-					':uno' => $top,
-					':dos' => $bottom
-				]);
+					$params = [$userId, $tipoId, $top, $bottom];
+					if ($hasLegacyUno) {
+						$params[] = $top;
+					}
+					if ($hasLegacyDos) {
+						$params[] = $bottom;
+					}
+					$insertStmt->execute($params);
 			}
 
 			$exercises = miuni_fetch_user_exercises($pdo, $userId, $tipoId);
