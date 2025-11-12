@@ -183,7 +183,7 @@ unset($_SESSION['register_errors'], $_SESSION['register_old'], $_SESSION['flash'
             </script>
           <?php endif; ?>
 
-          <form action="/miuni/auth/register.php" method="post" id="registro-form" class="relative space-y-4">
+          <form action="/auth/register.php" method="post" id="registro-form" class="relative space-y-4">
             <div>
               <label for="nombre" class="block text-sm font-medium text-english-walnut">Nombre</label>
               <input id="nombre" name="nombre" required
