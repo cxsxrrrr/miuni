@@ -40,6 +40,7 @@ if (isset($input['answer'])) {
   }
 }
 
+require_once __DIR__ . '/../includes/funciones.php';
 require_once __DIR__ . '/../includes/db.php';
 
 $userId = (int)$_SESSION['user_id'];
@@ -118,7 +119,9 @@ try {
     'correcto' => $correcto
   ]);
 } catch (Throwable $exception) {
-  error_log('Error actualizando resultado: ' . $exception->getMessage());
+  $message = 'Error actualizando resultado: ' . $exception->getMessage();
+  error_log($message);
+  miuni_log_error($message);
   http_response_code(500);
   echo json_encode(['error' => 'No fue posible guardar el resultado']);
 }

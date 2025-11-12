@@ -6,6 +6,7 @@ declare(strict_types=1);
 session_start();
 
 require_once __DIR__ . '/../includes/db.php'; // expone $pdo
+require_once __DIR__ . '/../includes/funciones.php';
 
 // Helper para limpiar cadenas
 function clean_str(string $v): string {
@@ -67,6 +68,13 @@ try {
 	$_SESSION['user_id'] = (int)$user['usuario_id'];
 	$_SESSION['user_name'] = (string)$user['nombre'];
 	$_SESSION['user_email'] = (string)$user['email'];
+
+		try {
+			$tipoId = miuni_get_or_create_tipo_id($pdo, 'suma');
+			miuni_ensure_user_exercises($pdo, (int)$user['usuario_id'], $tipoId, 8);
+		} catch (Throwable $seedException) {
+			miuni_log_error('Error preparando ejercicios para el usuario ' . $user['usuario_id'] . ': ' . $seedException->getMessage());
+		}
 
 	// Redirigir a la zona de juegos (o dashboard)
 	header('Location: ../juegos.php');

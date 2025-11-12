@@ -4,44 +4,13 @@ declare(strict_types=1);
 require_once __DIR__ . '/includes/auth_guard.php';
 require_login();
 
+require_once __DIR__ . '/includes/funciones.php';
 require_once __DIR__ . '/includes/db.php';
 
 $userId = (int)$_SESSION['user_id'];
 
-if (!function_exists('miuni_random_int')) {
-  function miuni_random_int(int $min, int $max): int {
-    if (function_exists('random_int')) {
-      return random_int($min, $max);
-    }
-    return mt_rand($min, $max);
-  }
-}
-
 try {
-  $tipoStmt = $pdo->prepare('SELECT tipo_id FROM tipos_operacion WHERE nombre = :nombre LIMIT 1');
-  $tipoStmt->execute([':nombre' => 'suma']);
-  $tipoId = $tipoStmt->fetchColumn();
-
-  if ($tipoId === false) {
-    try {
-      $insertTipo = $pdo->prepare('INSERT INTO tipos_operacion (nombre) VALUES (:nombre)');
-      $insertTipo->execute([':nombre' => 'suma']);
-      $tipoId = (int)$pdo->lastInsertId();
-    } catch (PDOException $insertException) {
-      if ((int)($insertException->errorInfo[1] ?? 0) === 1062) {
-        $tipoStmt->execute([':nombre' => 'suma']);
-        $tipoId = $tipoStmt->fetchColumn();
-      } else {
-        throw $insertException;
-      }
-    }
-
-    if ($tipoId === false) {
-      throw new RuntimeException('No se pudo registrar el tipo de operación "suma".');
-    }
-  }
-
-  $tipoId = (int)$tipoId;
+  $tipoId = miuni_get_or_create_tipo_id($pdo, 'suma');
 
   if (isset($_GET['reset'])) {
     $resetStmt = $pdo->prepare('UPDATE ejercicios_usuario SET activo = 0 WHERE usuario_id = :uid AND tipo_id = :tid AND activo = 1');
@@ -50,50 +19,13 @@ try {
     exit;
   }
 
-  $fetchExercises = function () use ($pdo, $userId, $tipoId) {
-    $stmt = $pdo->prepare(
-      'SELECT id, sumando_uno, sumando_dos, respuesta_usuario, correcto, resuelto, fecha_creacion
-       FROM ejercicios_usuario
-       WHERE usuario_id = :uid AND tipo_id = :tid AND activo = 1
-       ORDER BY fecha_creacion ASC, id ASC'
-    );
-    $stmt->execute([':uid' => $userId, ':tid' => $tipoId]);
-    return $stmt->fetchAll() ?: [];
-  };
-
-  $exercises = $fetchExercises();
-
-  $needed = 8 - count($exercises);
-  if ($needed > 0) {
-    $insertStmt = $pdo->prepare(
-      'INSERT INTO ejercicios_usuario (usuario_id, tipo_id, sumando_uno, sumando_dos)
-       VALUES (:uid, :tid, :uno, :dos)'
-    );
-
-    for ($i = 0; $i < $needed; $i++) {
-  $top = miuni_random_int(10000, 99999);
-  $bottom = miuni_random_int(10, 99);
-      $insertStmt->execute([
-        ':uid' => $userId,
-        ':tid' => $tipoId,
-        ':uno' => $top,
-        ':dos' => $bottom
-      ]);
-    }
-
-    $exercises = $fetchExercises();
-  }
-
-  $completed = 0;
-  foreach ($exercises as $exercise) {
-    if ((int)$exercise['resuelto'] === 1 && (int)$exercise['correcto'] === 1) {
-      $completed++;
-    }
-  }
-
+  $exercises = miuni_ensure_user_exercises($pdo, $userId, $tipoId, 8);
+  $completed = miuni_count_completed_exercises($exercises);
   $total = count($exercises);
 } catch (Throwable $e) {
-  error_log('Error cargando ejercicios: ' . $e->getMessage());
+  $message = 'Error cargando ejercicios: ' . $e->getMessage();
+  error_log($message);
+  miuni_log_error($message);
   http_response_code(500);
   echo 'No fue posible cargar tus ejercicios en este momento.';
   exit;

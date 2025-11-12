@@ -4,6 +4,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/includes/auth_guard.php';
 require_login();
 
+require_once __DIR__ . '/includes/funciones.php';
 require_once __DIR__ . '/includes/db.php';
 
 $userId = (int)$_SESSION['user_id'];
@@ -15,30 +16,7 @@ if (!$exerciseId) {
 }
 
 try {
-  $tipoStmt = $pdo->prepare('SELECT tipo_id FROM tipos_operacion WHERE nombre = :nombre LIMIT 1');
-  $tipoStmt->execute([':nombre' => 'suma']);
-  $tipoId = $tipoStmt->fetchColumn();
-
-  if ($tipoId === false) {
-    try {
-      $insertTipo = $pdo->prepare('INSERT INTO tipos_operacion (nombre) VALUES (:nombre)');
-      $insertTipo->execute([':nombre' => 'suma']);
-      $tipoId = (int)$pdo->lastInsertId();
-    } catch (PDOException $insertException) {
-      if ((int)($insertException->errorInfo[1] ?? 0) === 1062) {
-        $tipoStmt->execute([':nombre' => 'suma']);
-        $tipoId = $tipoStmt->fetchColumn();
-      } else {
-        throw $insertException;
-      }
-    }
-
-    if ($tipoId === false) {
-      throw new RuntimeException('No se pudo registrar el tipo de operación "suma".');
-    }
-  }
-
-  $tipoId = (int)$tipoId;
+  $tipoId = miuni_get_or_create_tipo_id($pdo, 'suma');
 
   $exerciseStmt = $pdo->prepare(
     'SELECT id, sumando_uno, sumando_dos, respuesta_usuario, resuelto, correcto
@@ -85,7 +63,9 @@ try {
     exit;
   }
 } catch (Throwable $e) {
-  error_log('Error cargando ejercicio: ' . $e->getMessage());
+  $message = 'Error cargando ejercicio: ' . $e->getMessage();
+  error_log($message);
+  miuni_log_error($message);
   http_response_code(500);
   echo 'No fue posible cargar el ejercicio.';
   exit;
