@@ -70,8 +70,8 @@ try {
     ]);
 
     // éxito
-    $_SESSION['registered'] = true;
-    header('Location: ../index.php?registered=1');
+    $_SESSION['flash']['registered'] = true;
+    header('Location: ../registro.php');
     exit;
 } catch (PDOException $e) {
     error_log('Register error: ' . $e->getMessage());

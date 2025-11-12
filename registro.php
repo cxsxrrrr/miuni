@@ -2,9 +2,9 @@
 session_start();
 $serverErrors = $_SESSION['register_errors'] ?? [];
 $old = $_SESSION['register_old'] ?? [];
-$registered = $_SESSION['registered'] ?? false;
-// limpiar flash
-unset($_SESSION['register_errors'], $_SESSION['register_old'], $_SESSION['registered']);
+// leer flash de forma segura y eliminarlo inmediatamente
+$registered = $_SESSION['flash']['registered'] ?? false;
+unset($_SESSION['register_errors'], $_SESSION['register_old'], $_SESSION['flash']['registered']);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -86,6 +86,12 @@ unset($_SESSION['register_errors'], $_SESSION['register_old'], $_SESSION['regist
     </div>
 
     <main class="max-w-6xl mx-auto py-12 px-6">
+      <a href="index.php" class="inline-flex items-center gap-2 text-sm text-black-200 hover:text-black mb-4" aria-label="Volver al inicio">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+              <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+            Volver
+        </a>
       <div class="relative grid grid-cols-1 md:grid-cols-2 gap-10 items-stretch">
         <!-- Decorative accents -->
         <div class="hidden md:block absolute right-0 bottom-0 w-72 h-72 rounded-full bg-danube/20 blur-3xl transform -translate-x-12 pointer-events-none"></div>
@@ -118,19 +124,63 @@ unset($_SESSION['register_errors'], $_SESSION['register_old'], $_SESSION['regist
           <h1 id="registro-title" class="relative text-2xl font-bold text-english-walnut mb-4">Registro de Usuario</h1>
 
           <?php if (!empty($serverErrors)): ?>
-            <div class="mb-4 p-3 rounded-md bg-red-700/10 border border-red-600 text-red-200">
-              <ul class="list-disc pl-5">
-                <?php foreach ($serverErrors as $err): ?>
-                  <li><?php echo htmlspecialchars($err); ?></li>
-                <?php endforeach; ?>
-              </ul>
+            <!-- error toast (top-right), auto-hide -->
+            <div id="error-toast" class="fixed right-6 top-6 z-50 max-w-xs w-full bg-red-50 border border-red-200 text-red-800 rounded-lg shadow-sm p-3 flex items-start gap-3">
+              <svg class="w-5 h-5 mt-0.5 text-red-600 flex-none" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+                <path d="M12 9v4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M12 17h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" stroke="currentColor" stroke-width="0.4" stroke-linecap="round" stroke-linejoin="round" opacity="0.12"/>
+              </svg>
+
+              <div class="flex-1 text-sm">
+                <div class="font-medium">Problema al registrar</div>
+                <div class="mt-1 text-xs text-red-700">
+                  <?php foreach ($serverErrors as $err): ?>
+                    <div><?php echo htmlspecialchars($err); ?></div>
+                  <?php endforeach; ?>
+                </div>
+
+                <div class="mt-2 flex items-center gap-2">
+                  <a href="login.php" class="inline-block px-3 py-1 text-xs bg-white text-red-700 rounded-md font-medium hover:underline">Ir a iniciar sesión</a>
+                </div>
+              </div>
+
+              <button id="close-error-toast" class="text-red-600 text-sm px-1" aria-label="Cerrar">✕</button>
             </div>
+
+            <script>
+              (function(){
+                const el = document.getElementById('error-toast');
+                document.getElementById('close-error-toast')?.addEventListener('click', ()=> el && el.remove());
+                // auto-hide 6s
+                setTimeout(()=> el && el.remove(), 6000);
+              })();
+            </script>
           <?php endif; ?>
 
           <?php if ($registered): ?>
-            <div class="mb-4 p-3 rounded-md bg-green-700/10 border border-green-600 text-green-200">
-              Registro completado. Puedes iniciar sesión ahora.
+            <!-- subtle top-right toast, auto-hide -->
+            <div id="registered-toast" class="fixed right-6 top-6 z-50 max-w-xs w-full bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-lg shadow-sm p-3 flex items-start gap-3">
+              <svg class="w-5 h-5 mt-0.5 text-emerald-600 flex-none" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+                <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <div class="flex-1 text-sm">
+                <div class="font-medium">Registrado correctamente</div>
+                <div class="text-xs text-emerald-700 mt-0.5">Tu cuenta se creó con éxito.</div>
+              </div>
+              <div class="flex flex-col items-end gap-2">
+                <a href="login.php" class="inline-block bg-emerald-600 text-white text-xs px-3 py-1 rounded-md">Ir al login</a>
+                <button id="close-registered" class="text-emerald-600 text-sm px-1" aria-label="Cerrar">✕</button>
+              </div>
             </div>
+            <script>
+              (function(){
+                const el = document.getElementById('registered-toast');
+                document.getElementById('close-registered')?.addEventListener('click', ()=> el && (el.remove()));
+                // auto-hide 6s
+                setTimeout(()=> el && el.remove(), 6000);
+              })();
+            </script>
           <?php endif; ?>
 
           <form action="/miuni/auth/register.php" method="post" id="registro-form" class="relative space-y-4">

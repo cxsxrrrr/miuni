@@ -68,13 +68,32 @@
             .speech-bubble img { width: 100%; height: auto; display: block; }
             .speech-bubble__text { position: absolute; inset: 25% 20% 38% 12%; display: flex; align-items: center; justify-content: center; text-align: center; font-size: clamp(0.75rem, 1.1vw, 1rem); line-height: 1.4; color: #372721; font-weight: 500; }
         }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #374151;
+      text-decoration: none;
+      margin-bottom: 0.75rem;
+      font-size: 0.875rem;
+    }
+    .back-link svg { width: 1rem; height: 1rem; }
+    .back-link:hover { text-decoration: none; }
     </style>
-</head> 
-<body class="bg-background hero-bg min-h-screen">
+  </head>
+  <body class="bg-background hero-bg min-h-screen">
     <div class="auth-wrapper">
         <!-- Card column -->
         <div class="auth-card">
             <div class="card-inner animate-pulse-fade-in">
+               <!-- Back link colocado dentro de la tarjeta, arriba del título -->
+               <a href="index.php" class="back-link text-sm text-black-200 hover:text-black mb-4" aria-label="Volver al inicio">
+                   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+                       <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                   </svg>
+                   Volver
+               </a>
                 <?php if (isset($_GET['error'])): ?>
                     <?php
                         $msg = '';

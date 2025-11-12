@@ -1,62 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php
+// simple listado de ejercicios
+?>
+<!doctype html>
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MiUni Kids Matemáticas | Juegos</title>
-    <link rel="stylesheet" href="index.css">
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>MiUniKids | Ejercicios</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="min-h-screen bg-gradient-to-b from-sky-50 to-white">
-    <main class="max-w-3xl mx-auto p-6">
-      <h1 class="text-3xl font-extrabold text-sky-800 mb-4">Juegos de Matemáticas</h1>
-      <p class="text-gray-700">¡Diviértete aprendiendo matemáticas con nuestros juegos interactivos!</p>
-    </main>
+<body class="min-h-screen bg-gradient-to-br from-pink-50 via-rose-50 to-white flex items-center justify-center p-6">
+  <main class="max-w-4xl w-full">
+    <header class="mb-6 flex items-center justify-between">
+      <h1 class="text-3xl font-extrabold text-rose-800">Ejercicios · MiUniKids</h1>
+      <a href="../index.php" class="text-sm text-rose-600 hover:underline">Volver</a>
+    </header>
 
-    <script>
-        (function() {
-            var originalTitle = document.title;
-            var titleChanged = false;
+    <section class="grid gap-6 grid-cols-1 sm:grid-cols-2">
+      <a href="suma.php" class="block rounded-xl p-6 bg-white shadow hover:scale-105 transition transform">
+        <h2 class="text-xl font-bold text-sky-800">Suma: 5 dígitos + 2 cifras</h2>
+        <p class="mt-2 text-sm text-gray-600">Practica sumas con números grandes, paso a paso.</p>
+      </a>
 
-            function setLeaveTitle() {
-                if (!titleChanged) {
-                    try { document.title = '¡Regresa a Jugar Pronto!'; } catch (e) {}
-                    titleChanged = true;
-                }
-            }
+      <a href="resta.php" class="block rounded-xl p-6 bg-white shadow hover:scale-105 transition transform">
+        <h2 class="text-xl font-bold text-sky-800">Resta: 5 dígitos - 2 cifras</h2>
+        <p class="mt-2 text-sm text-gray-600">Sustracciones con llevadas, con explicación visual.</p>
+      </a>
 
-            function restoreTitle() {
-                if (titleChanged) {
-                    try { document.title = originalTitle; } catch (e) {}
-                    titleChanged = false;
-                }
-            }
-
-
-            window.addEventListener('beforeunload', function (e) {
-                setLeaveTitle();
-                var message = '¡Regresa a Jugar Pronto!';
-                e.returnValue = message; 
-                return message;
-            });
-
-            document.addEventListener('visibilitychange', function() {
-                if (document.hidden) {
-                    setLeaveTitle();
-                } else {
-                    restoreTitle();
-                }
-            });
-
-
-            document.addEventListener('click', function(ev) {
-                var a = ev.target.closest && ev.target.closest('a');
-                if (!a) return;
-                var href = a.getAttribute('href');
-                if (href && href.indexOf('#') !== 0 && href.indexOf('javascript:') !== 0) {
-                    setLeaveTitle();
-                }
-            });
-        })();
-    </script>
+      <a href="mixed.php" class="block rounded-xl p-6 bg-white shadow hover:scale-105 transition transform">
+        <h2 class="text-xl font-bold text-sky-800">Mezcla: Sumas y Restas</h2>
+        <p class="mt-2 text-sm text-gray-600">Combina operaciones para practicar ambas habilidades.</p>
+      </a>
+    </section>
+  </main>
 </body>
 </html>

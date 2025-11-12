@@ -48,7 +48,7 @@
 
           </div>
 
-          <div id="heroContent" class="w-full max-w-xl space-y-8 text-white/90 text-center md:text-left mx-auto md:mx-0 overflow-hidden">
+          <div id="heroContent" class="w-full max-w-xl space-y-8 text-white/90 text-center md:text-left mx-auto md:mx-0 overflow-visible">
             <div class="space-y-5">
               <p id="heroEyebrow" class="uppercase tracking-[0.4em] text-white/70 text-xs sm:text-sm">Aprende</p>
               <h1 id="heroTitle" class="text-5xl sm:text-6xl md:text-7xl font-extrabold leading-tight">MATEMÁTICAS</h1>
