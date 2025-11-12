@@ -8,29 +8,26 @@ require_once __DIR__ . '/includes/db.php';
 
 $userId = (int)$_SESSION['user_id'];
 
+if (!function_exists('miuni_random_int')) {
+  function miuni_random_int(int $min, int $max): int {
+    if (function_exists('random_int')) {
+      return random_int($min, $max);
+    }
+    return mt_rand($min, $max);
+  }
+}
+
 try {
   $tipoStmt = $pdo->prepare('SELECT tipo_id FROM tipos_operacion WHERE nombre = :nombre LIMIT 1');
   $tipoStmt->execute([':nombre' => 'suma']);
   $tipoId = $tipoStmt->fetchColumn();
 
   if ($tipoId === false) {
-    $startedTransaction = !$pdo->inTransaction();
-    if ($startedTransaction) {
-      $pdo->beginTransaction();
-    }
-
     try {
       $insertTipo = $pdo->prepare('INSERT INTO tipos_operacion (nombre) VALUES (:nombre)');
       $insertTipo->execute([':nombre' => 'suma']);
       $tipoId = (int)$pdo->lastInsertId();
-      if ($startedTransaction) {
-        $pdo->commit();
-      }
     } catch (PDOException $insertException) {
-      if ($startedTransaction && $pdo->inTransaction()) {
-        $pdo->rollBack();
-      }
-      // Si otro proceso ya lo creó, volvemos a consultarlo.
       if ((int)($insertException->errorInfo[1] ?? 0) === 1062) {
         $tipoStmt->execute([':nombre' => 'suma']);
         $tipoId = $tipoStmt->fetchColumn();
@@ -74,8 +71,8 @@ try {
     );
 
     for ($i = 0; $i < $needed; $i++) {
-      $top = random_int(10000, 99999);
-      $bottom = random_int(10, 99);
+  $top = miuni_random_int(10000, 99999);
+  $bottom = miuni_random_int(10, 99);
       $insertStmt->execute([
         ':uid' => $userId,
         ':tid' => $tipoId,

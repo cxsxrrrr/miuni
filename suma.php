@@ -20,22 +20,11 @@ try {
   $tipoId = $tipoStmt->fetchColumn();
 
   if ($tipoId === false) {
-    $startedTransaction = !$pdo->inTransaction();
-    if ($startedTransaction) {
-      $pdo->beginTransaction();
-    }
-
     try {
       $insertTipo = $pdo->prepare('INSERT INTO tipos_operacion (nombre) VALUES (:nombre)');
       $insertTipo->execute([':nombre' => 'suma']);
       $tipoId = (int)$pdo->lastInsertId();
-      if ($startedTransaction) {
-        $pdo->commit();
-      }
     } catch (PDOException $insertException) {
-      if ($startedTransaction && $pdo->inTransaction()) {
-        $pdo->rollBack();
-      }
       if ((int)($insertException->errorInfo[1] ?? 0) === 1062) {
         $tipoStmt->execute([':nombre' => 'suma']);
         $tipoId = $tipoStmt->fetchColumn();
