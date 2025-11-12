@@ -59,9 +59,59 @@ if (!function_exists('miuni_get_or_create_tipo_id')) {
 	}
 }
 
+if (!function_exists('miuni_ensure_ejercicios_schema')) {
+	function miuni_ensure_ejercicios_schema(PDO $pdo): void
+	{
+		static $checked = false;
+		if ($checked) {
+			return;
+		}
+
+		try {
+			$columns = [];
+			$stmt = $pdo->query('SHOW COLUMNS FROM ejercicios_usuario');
+			while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+				$columns[$row['Field']] = true;
+			}
+
+			$alter = [];
+			if (!isset($columns['sumando_uno'])) {
+				$alter[] = 'ADD COLUMN sumando_uno INT NOT NULL DEFAULT 0 AFTER tipo_id';
+			}
+			if (!isset($columns['sumando_dos'])) {
+				$alter[] = 'ADD COLUMN sumando_dos INT NOT NULL DEFAULT 0 AFTER sumando_uno';
+			}
+			if (!isset($columns['respuesta_usuario'])) {
+				$alter[] = 'ADD COLUMN respuesta_usuario INT DEFAULT NULL AFTER sumando_dos';
+			}
+			if (!isset($columns['correcto'])) {
+				$alter[] = 'ADD COLUMN correcto BOOLEAN DEFAULT FALSE AFTER respuesta_usuario';
+			}
+			if (!isset($columns['resuelto'])) {
+				$alter[] = 'ADD COLUMN resuelto BOOLEAN DEFAULT FALSE AFTER correcto';
+			}
+			if (!isset($columns['activo'])) {
+				$alter[] = 'ADD COLUMN activo BOOLEAN DEFAULT TRUE AFTER resuelto';
+			}
+			if (!isset($columns['fecha_creacion'])) {
+				$alter[] = 'ADD COLUMN fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP AFTER activo';
+			}
+
+			if ($alter) {
+				$pdo->exec('ALTER TABLE ejercicios_usuario ' . implode(', ', $alter));
+			}
+		} catch (Throwable $e) {
+			miuni_log_error('No se pudo validar/ajustar la tabla ejercicios_usuario: ' . $e->getMessage());
+		}
+
+		$checked = true;
+	}
+}
+
 if (!function_exists('miuni_fetch_user_exercises')) {
 	function miuni_fetch_user_exercises(PDO $pdo, int $userId, int $tipoId): array
 	{
+		miuni_ensure_ejercicios_schema($pdo);
 		$stmt = $pdo->prepare(
 			'SELECT id, sumando_uno, sumando_dos, respuesta_usuario, correcto, resuelto, fecha_creacion
 			 FROM ejercicios_usuario
@@ -77,6 +127,7 @@ if (!function_exists('miuni_fetch_user_exercises')) {
 if (!function_exists('miuni_ensure_user_exercises')) {
 	function miuni_ensure_user_exercises(PDO $pdo, int $userId, int $tipoId, int $target = 8): array
 	{
+		miuni_ensure_ejercicios_schema($pdo);
 		$exercises = miuni_fetch_user_exercises($pdo, $userId, $tipoId);
 		$needed = $target - count($exercises);
 
