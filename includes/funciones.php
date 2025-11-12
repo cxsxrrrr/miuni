@@ -71,30 +71,55 @@ if (!function_exists('miuni_ensure_ejercicios_schema')) {
 			$columns = [];
 			$stmt = $pdo->query('SHOW COLUMNS FROM ejercicios_usuario');
 			while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-				$columns[$row['Field']] = true;
+				$columns[$row['Field']] = $row;
 			}
 
 			$alter = [];
+
 			if (!isset($columns['sumando_uno'])) {
-				$alter[] = 'ADD COLUMN sumando_uno INT NOT NULL DEFAULT 0 AFTER tipo_id';
+				if (isset($columns['operando_uno'])) {
+					$alter[] = 'CHANGE COLUMN operando_uno sumando_uno INT NOT NULL';
+				} else {
+					$alter[] = 'ADD COLUMN sumando_uno INT NOT NULL AFTER tipo_id';
+				}
+			} elseif ((int)$columns['sumando_uno']['Null'] === 1 || strpos($columns['sumando_uno']['Type'], 'int') === false) {
+				$alter[] = 'MODIFY COLUMN sumando_uno INT NOT NULL';
 			}
+
 			if (!isset($columns['sumando_dos'])) {
-				$alter[] = 'ADD COLUMN sumando_dos INT NOT NULL DEFAULT 0 AFTER sumando_uno';
+				if (isset($columns['operando_dos'])) {
+					$alter[] = 'CHANGE COLUMN operando_dos sumando_dos INT NOT NULL';
+				} else {
+					$alter[] = 'ADD COLUMN sumando_dos INT NOT NULL AFTER sumando_uno';
+				}
+			} elseif ((int)$columns['sumando_dos']['Null'] === 1 || strpos($columns['sumando_dos']['Type'], 'int') === false) {
+				$alter[] = 'MODIFY COLUMN sumando_dos INT NOT NULL';
 			}
+
 			if (!isset($columns['respuesta_usuario'])) {
 				$alter[] = 'ADD COLUMN respuesta_usuario INT DEFAULT NULL AFTER sumando_dos';
 			}
+
 			if (!isset($columns['correcto'])) {
-				$alter[] = 'ADD COLUMN correcto BOOLEAN DEFAULT FALSE AFTER respuesta_usuario';
+				$alter[] = 'ADD COLUMN correcto BOOLEAN NOT NULL DEFAULT FALSE AFTER respuesta_usuario';
+			} elseif (stripos($columns['correcto']['Type'], 'tinyint') === false && stripos($columns['correcto']['Type'], 'bool') === false) {
+				$alter[] = 'MODIFY COLUMN correcto BOOLEAN NOT NULL DEFAULT FALSE';
 			}
+
 			if (!isset($columns['resuelto'])) {
-				$alter[] = 'ADD COLUMN resuelto BOOLEAN DEFAULT FALSE AFTER correcto';
+				$alter[] = 'ADD COLUMN resuelto BOOLEAN NOT NULL DEFAULT FALSE AFTER correcto';
+			} elseif (stripos($columns['resuelto']['Type'], 'tinyint') === false && stripos($columns['resuelto']['Type'], 'bool') === false) {
+				$alter[] = 'MODIFY COLUMN resuelto BOOLEAN NOT NULL DEFAULT FALSE';
 			}
+
 			if (!isset($columns['activo'])) {
-				$alter[] = 'ADD COLUMN activo BOOLEAN DEFAULT TRUE AFTER resuelto';
+				$alter[] = 'ADD COLUMN activo BOOLEAN NOT NULL DEFAULT TRUE AFTER resuelto';
+			} elseif (stripos($columns['activo']['Type'], 'tinyint') === false && stripos($columns['activo']['Type'], 'bool') === false) {
+				$alter[] = 'MODIFY COLUMN activo BOOLEAN NOT NULL DEFAULT TRUE';
 			}
+
 			if (!isset($columns['fecha_creacion'])) {
-				$alter[] = 'ADD COLUMN fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP AFTER activo';
+				$alter[] = 'ADD COLUMN fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER activo';
 			}
 
 			if ($alter) {
