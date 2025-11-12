@@ -1,13 +1,11 @@
 <?php
 declare(strict_types=1);
-$DB_HOST = getenv('DB_HOST') ?: '127.0.0.1';
-// Allow overriding the port via environment variable (useful for different envs / tunnels).
-// Default to 3306 which is the standard MySQL port.
-$DB_PORT = (int) (getenv('DB_PORT') ?: 3306);
+$DB_HOST = 'localhost';
 $DB_NAME = 'grup_miunikids';
 $DB_USER = 'grup_admin';
 $DB_PASS = 'miuni123';
-$dsn = sprintf('mysql:host=%s;port=%d;dbname=%s;charset=utf8mb4', $DB_HOST, $DB_PORT, $DB_NAME);
+
+$dsn = sprintf('mysql:host=%s;dbname=%s;charset=utf8mb4', $DB_HOST, $DB_NAME);
 $options = [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
