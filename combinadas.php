@@ -66,8 +66,8 @@ try {
 	<main class="max-w-5xl mx-auto">
 		<header class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8 text-white">
 			<div class="flex flex-col gap-2">
-				<h1 class="text-3xl font-extrabold text-emerald-200 drop-shadow-sm">Ejercicios Combinados</h1>
-				<p class="text-sm font-semibold text-emerald-200 drop-shadow-sm">Practica sumas y restas en un solo lugar.</p>
+				<h1 class="text-3xl font-extrabold text-emerald-700">Ejercicios Combinados</h1>
+				<p class="text-sm font-semibold text-emerald-600">Practica sumas y restas en un solo lugar.</p>
 			</div>
 			<div class="flex items-center gap-3">
 				<span class="px-3 py-1 rounded-full bg-emerald-900/80 text-white text-sm font-semibold shadow">Completados: <?php echo $completed; ?>/<?php echo $total; ?></span>

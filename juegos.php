@@ -19,6 +19,64 @@ require_login();
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    border-radius: 0.75rem;
+    box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+  }
+  .carousel {
+    position: relative;
+    overflow: hidden;
+    border-radius: 0.75rem;
+  }
+  .carousel-track {
+    display: flex;
+    width: 100%;
+    touch-action: pan-y;
+  }
+  .carousel-slide {
+    min-width: 100%;
+    padding: 1.5rem;
+    box-sizing: border-box;
+  }
+  .carousel-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    gap: 0.75rem;
+    width: 100%;
+    justify-content: space-between;
+    pointer-events: none;
+  }
+  .carousel-button {
+    pointer-events: all;
+    background: rgba(255,255,255,0.85);
+    border-radius: 9999px;
+    padding: 0.35rem 0.7rem;
+    font-weight: 700;
+    color: #be123c;
+    box-shadow: 0 10px 18px rgba(0,0,0,0.15);
+    transition: transform 0.2s ease, background 0.2s ease;
+  }
+  .carousel-button:hover {
+    transform: scale(1.05);
+    background: rgba(255,255,255,1);
+  }
+  .carousel-indicators {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  .carousel-indicators button {
+    width: 10px;
+    height: 10px;
+    border-radius: 9999px;
+    background: rgba(190, 18, 60, 0.35);
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+  .carousel-indicators button[aria-current="true"] {
+    background: #be123c;
+    transform: scale(1.2);
   }
   </style>
 </head>
@@ -29,22 +87,119 @@ require_login();
       <a href="../index.php" class="text-sm text-rose-600 hover:underline">Volver</a>
     </header>
 
-    <section class="grid gap-6 grid-cols-1 sm:grid-cols-2">
-      <a href="sumas.php" class="option-card block rounded-xl p-6 shadow hover:scale-105 transition transform text-rose-700">
+    <section class="carousel" aria-label="Ejercicios disponibles">
+      <div class="carousel-track" id="exerciseTrack">
+      <article class="carousel-slide">
+        <a href="sumas.php" class="option-card block h-full p-6 transition transform text-rose-700">
         <h2 class="text-xl font-bold">Suma: 5 dígitos + 2 cifras</h2>
-        <p class="mt-2 text-sm">Practica sumas con números grandes, paso a paso.</p>
-      </a>
-
-	  <a href="restas.php" class="option-card block rounded-xl p-6 shadow hover:scale-105 transition transform text-rose-700">
+        <p class="mt-2 text-sm font-semibold">Practica sumas con números grandes, paso a paso.</p>
+        </a>
+      </article>
+      <article class="carousel-slide">
+        <a href="restas.php" class="option-card block h-full p-6 transition transform text-rose-700">
         <h2 class="text-xl font-bold">Resta: 5 dígitos - 2 cifras</h2>
-        <p class="mt-2 text-sm">Sustracciones con llevadas, con explicación visual.</p>
-      </a>
-
-      <a href="combinadas.php" class="option-card block rounded-xl p-6 shadow hover:scale-105 transition transform text-rose-700">
+        <p class="mt-2 text-sm font-semibold">Sustracciones con llevadas, con explicación visual.</p>
+        </a>
+      </article>
+      <article class="carousel-slide">
+        <a href="combinadas.php" class="option-card block h-full p-6 transition transform text-rose-700">
         <h2 class="text-xl font-bold">Combinadas: 4 sumas y 4 restas</h2>
-        <p class="mt-2 text-sm">Alterna operaciones y fortalece ambas habilidades.</p>
-      </a>
+        <p class="mt-2 text-sm font-semibold">Alterna operaciones y fortalece ambas habilidades.</p>
+        </a>
+      </article>
+      </div>
+      <div class="carousel-nav" aria-hidden="true">
+      <button type="button" class="carousel-button" data-direction="prev">←</button>
+      <button type="button" class="carousel-button" data-direction="next">→</button>
+      </div>
     </section>
+    <div class="carousel-indicators" role="tablist" aria-label="Paginador de ejercicios">
+      <button type="button" data-slide="0" aria-current="true" aria-label="Ver sumas"></button>
+      <button type="button" data-slide="1" aria-label="Ver restas"></button>
+      <button type="button" data-slide="2" aria-label="Ver combinadas"></button>
+    </div>
   </main>
+
+    <script>
+    (function(){
+      const track = document.getElementById('exerciseTrack');
+      if (!track) { return; }
+      const slides = Array.from(track.children);
+      const buttons = document.querySelectorAll('.carousel-button');
+      const indicators = Array.from(document.querySelectorAll('.carousel-indicators button'));
+      let index = 0;
+      let startX = 0;
+      let isDragging = false;
+      let currentOffset = 0;
+      let pointerId = null;
+
+      const clampIndex = (value) => Math.max(0, Math.min(slides.length - 1, value));
+
+      const updateTransform = (immediate = false) => {
+      if (immediate) {
+        track.style.transition = 'none';
+      } else {
+        track.style.transition = 'transform 0.3s ease';
+      }
+      track.style.transform = `translateX(-${index * 100}%)`;
+      indicators.forEach((dot, dotIndex) => {
+        dot.setAttribute('aria-current', dotIndex === index ? 'true' : 'false');
+      });
+      };
+
+      const beginDrag = (event) => {
+      isDragging = true;
+      pointerId = event.pointerId;
+      startX = event.clientX;
+      currentOffset = -index * track.offsetWidth;
+      track.style.transition = 'none';
+      track.setPointerCapture(pointerId);
+      };
+
+      const onDrag = (event) => {
+      if (!isDragging || event.pointerId !== pointerId) { return; }
+      const delta = event.clientX - startX;
+      const offset = currentOffset + delta;
+      track.style.transform = `translateX(${offset}px)`;
+      };
+
+      const endDrag = (event) => {
+      if (!isDragging || event.pointerId !== pointerId) { return; }
+      isDragging = false;
+      track.releasePointerCapture(pointerId);
+      const delta = event.clientX - startX;
+      const threshold = track.offsetWidth * 0.2;
+      if (Math.abs(delta) > threshold) {
+        index = clampIndex(index + (delta < 0 ? 1 : -1));
+      }
+      updateTransform();
+      pointerId = null;
+      };
+
+      const handleButton = (event) => {
+      const direction = event.currentTarget.getAttribute('data-direction');
+      if (!direction) { return; }
+      index = clampIndex(index + (direction === 'next' ? 1 : -1));
+      updateTransform();
+      };
+
+      const handleIndicator = (event) => {
+      const slideTarget = Number.parseInt(event.currentTarget.getAttribute('data-slide'), 10);
+      if (Number.isNaN(slideTarget)) { return; }
+      index = clampIndex(slideTarget);
+      updateTransform();
+      };
+
+      track.addEventListener('pointerdown', beginDrag);
+      track.addEventListener('pointermove', onDrag);
+      track.addEventListener('pointerup', endDrag);
+      track.addEventListener('pointercancel', endDrag);
+
+      buttons.forEach((button) => button.addEventListener('click', handleButton));
+      indicators.forEach((dot) => dot.addEventListener('click', handleIndicator));
+
+      updateTransform(true);
+    })();
+    </script>
 </body>
 </html>
