@@ -40,6 +40,7 @@ try {
   <style>
     body { font-family: 'Arial Rounded MT Bold', 'Helvetica Rounded', Arial, sans-serif; }
     .card-disabled { pointer-events: none; opacity: 0.55; }
+    .exercise-card { background-image: url('assets/games/pizarra.png'); background-size: cover; background-position: center; background-repeat: no-repeat; }
   </style>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-white p-6" style="background-image:url('assets/games/bgselector.png');background-size:cover;background-position:center;background-repeat:no-repeat;background-attachment:fixed;">
@@ -91,7 +92,7 @@ try {
         ?>
         <a
           href="suma.php?id=<?php echo (int)$exercise['id']; ?>"
-          class="block rounded-2xl bg-white/80 shadow hover:shadow-lg transition transform hover:-translate-y-1 p-6 border border-white/60 <?php echo $disabled ? 'card-disabled' : ''; ?>"
+          class="exercise-card block rounded-2xl shadow hover:shadow-lg transition transform hover:-translate-y-1 p-6 <?php echo $disabled ? 'card-disabled' : ''; ?>"
         >
           <div class="flex items-start justify-between gap-3">
             <div>
