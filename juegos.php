@@ -30,6 +30,7 @@ require_login();
     padding: 2.5rem 2rem;
     text-decoration: none;
     height: 100%;
+    width: min(520px, 100%);
   }
   .option-card h2 {
     font-weight: 800;
@@ -152,74 +153,17 @@ require_login();
       const buttons = document.querySelectorAll('.carousel-button');
       const indicators = Array.from(document.querySelectorAll('.carousel-indicators button'));
       let index = 0;
-      let startX = 0;
-      let isDragging = false;
-      let baseOffset = 0;
-      let pointerId = null;
-      let hasMoved = false;
 
       const clampIndex = (value) => Math.max(0, Math.min(slides.length - 1, value));
       const getSlideWidth = () => (container ? container.getBoundingClientRect().width : track.getBoundingClientRect().width) || 1;
 
-      const setTransform = (value, immediate = false) => {
-      track.style.transition = immediate ? 'none' : 'transform 0.3s ease';
-      track.style.transform = `translate3d(${value}px, 0, 0)`;
-      };
-
       const updateTransform = (immediate = false) => {
       const offset = -index * getSlideWidth();
-      setTransform(offset, immediate);
+      track.style.transition = immediate ? 'none' : 'transform 0.3s ease';
+      track.style.transform = `translate3d(${offset}px, 0, 0)`;
       indicators.forEach((dot, dotIndex) => {
         dot.setAttribute('aria-current', dotIndex === index ? 'true' : 'false');
       });
-      };
-
-      const beginDrag = (event) => {
-      if (event.pointerType === 'mouse' && event.button !== 0) { return; }
-      isDragging = true;
-      hasMoved = false;
-      pointerId = event.pointerId;
-      startX = event.clientX;
-      baseOffset = -index * getSlideWidth();
-      track.style.transition = 'none';
-      track.setPointerCapture(pointerId);
-      };
-
-      const onDrag = (event) => {
-      if (!isDragging || event.pointerId !== pointerId) { return; }
-      const delta = event.clientX - startX;
-      hasMoved = hasMoved || Math.abs(delta) > 6;
-      const slideWidth = getSlideWidth();
-      const overshoot = Math.min(slideWidth * 0.25, 120);
-      const minOffset = -(slides.length - 1) * slideWidth;
-      const rawOffset = baseOffset + delta;
-      const clampedOffset = Math.max(Math.min(rawOffset, overshoot), minOffset - overshoot);
-      setTransform(clampedOffset, true);
-      };
-
-      const endDrag = (event) => {
-      if (!isDragging || event.pointerId !== pointerId) { return; }
-      track.releasePointerCapture(pointerId);
-      isDragging = false;
-      const delta = event.clientX - startX;
-      const slideWidth = getSlideWidth();
-      const threshold = Math.max(slideWidth * 0.18, 48);
-      if (Math.abs(delta) >= threshold) {
-        if (delta < 0) {
-        index = clampIndex(index + 1);
-        } else {
-        index = clampIndex(index - 1);
-        }
-      }
-      updateTransform();
-      pointerId = null;
-      };
-
-      const cancelDrag = () => {
-      if (!isDragging) { return; }
-      isDragging = false;
-      pointerId = null;
-      updateTransform();
       };
 
       const handleButton = (event) => {
@@ -236,27 +180,9 @@ require_login();
       updateTransform();
       };
 
-      track.addEventListener('pointerdown', beginDrag);
-      track.addEventListener('pointermove', onDrag);
-      track.addEventListener('pointerup', endDrag);
-      track.addEventListener('pointercancel', cancelDrag);
-      track.addEventListener('lostpointercapture', cancelDrag);
-      track.addEventListener('pointerleave', (event) => {
-      if (isDragging && event.pointerId === pointerId) {
-        endDrag(event);
-      }
-      });
-
       buttons.forEach((button) => button.addEventListener('click', handleButton));
       indicators.forEach((dot) => dot.addEventListener('click', handleIndicator));
       window.addEventListener('resize', () => updateTransform(true));
-
-      track.addEventListener('click', (event) => {
-      if (hasMoved) {
-        event.preventDefault();
-        hasMoved = false;
-      }
-      }, true);
 
       updateTransform(true);
     })();
