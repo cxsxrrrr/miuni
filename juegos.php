@@ -15,7 +15,7 @@ require_login();
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
   .option-card {
-    background-image: url('assets/games/option.png');
+    background-image: url('assets/games/option.svg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -125,6 +125,7 @@ require_login();
       const track = document.getElementById('exerciseTrack');
       if (!track) { return; }
       const slides = Array.from(track.children);
+      const container = track.parentElement;
       const buttons = document.querySelectorAll('.carousel-button');
       const indicators = Array.from(document.querySelectorAll('.carousel-indicators button'));
       let index = 0;
@@ -132,15 +133,13 @@ require_login();
       let isDragging = false;
       let currentOffset = 0;
       let pointerId = null;
+      let hasMoved = false;
 
       const clampIndex = (value) => Math.max(0, Math.min(slides.length - 1, value));
+      const getSlideWidth = () => (container ? container.offsetWidth : track.offsetWidth || 1);
 
       const updateTransform = (immediate = false) => {
-      if (immediate) {
-        track.style.transition = 'none';
-      } else {
-        track.style.transition = 'transform 0.3s ease';
-      }
+      track.style.transition = immediate ? 'none' : 'transform 0.3s ease';
       track.style.transform = `translateX(-${index * 100}%)`;
       indicators.forEach((dot, dotIndex) => {
         dot.setAttribute('aria-current', dotIndex === index ? 'true' : 'false');
@@ -148,10 +147,12 @@ require_login();
       };
 
       const beginDrag = (event) => {
+      if (event.pointerType === 'mouse' && event.button !== 0) { return; }
       isDragging = true;
+      hasMoved = false;
       pointerId = event.pointerId;
       startX = event.clientX;
-      currentOffset = -index * track.offsetWidth;
+      currentOffset = -index * getSlideWidth();
       track.style.transition = 'none';
       track.setPointerCapture(pointerId);
       };
@@ -159,6 +160,7 @@ require_login();
       const onDrag = (event) => {
       if (!isDragging || event.pointerId !== pointerId) { return; }
       const delta = event.clientX - startX;
+      hasMoved = hasMoved || Math.abs(delta) > 5;
       const offset = currentOffset + delta;
       track.style.transform = `translateX(${offset}px)`;
       };
@@ -168,7 +170,7 @@ require_login();
       isDragging = false;
       track.releasePointerCapture(pointerId);
       const delta = event.clientX - startX;
-      const threshold = track.offsetWidth * 0.2;
+      const threshold = getSlideWidth() * 0.2;
       if (Math.abs(delta) > threshold) {
         index = clampIndex(index + (delta < 0 ? 1 : -1));
       }
@@ -194,9 +196,18 @@ require_login();
       track.addEventListener('pointermove', onDrag);
       track.addEventListener('pointerup', endDrag);
       track.addEventListener('pointercancel', endDrag);
+      track.addEventListener('lostpointercapture', () => { isDragging = false; pointerId = null; updateTransform(); });
 
       buttons.forEach((button) => button.addEventListener('click', handleButton));
       indicators.forEach((dot) => dot.addEventListener('click', handleIndicator));
+      window.addEventListener('resize', () => updateTransform(true));
+
+      track.addEventListener('click', (event) => {
+      if (hasMoved) {
+        event.preventDefault();
+        hasMoved = false;
+      }
+      }, true);
 
       updateTransform(true);
     })();
