@@ -70,13 +70,13 @@ try {
 				<p class="text-sm text-white/80">Practica sumas y restas en un solo lugar.</p>
 			</div>
 			<div class="flex items-center gap-3">
-				<span class="px-3 py-1 rounded-full bg-emerald-500/80 text-white text-sm font-semibold shadow-sm">Completados: <?php echo $completed; ?>/<?php echo $total; ?></span>
-				<a href="?reset=1" class="px-3 py-1 text-sm rounded-lg bg-white/20 text-white hover:bg-white/30 transition">Reiniciar</a>
+				<span class="px-3 py-1 rounded-full bg-emerald-600 text-white text-sm font-semibold shadow">Completados: <?php echo $completed; ?>/<?php echo $total; ?></span>
+				<a href="?reset=1" class="px-3 py-1 text-sm rounded-lg bg-rose-600 text-white font-semibold shadow hover:bg-rose-700 transition">Reiniciar</a>
 			</div>
 		</header>
 
 		<nav class="mb-6">
-			<a href="juegos.php" class="inline-flex items-center text-sm text-white hover:underline">← Volver a ejercicios</a>
+			<a href="juegos.php" class="inline-flex items-center text-sm text-white bg-slate-900/70 hover:bg-slate-900 rounded-lg px-3 py-1 shadow">← Volver a ejercicios</a>
 		</nav>
 
 		<section class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

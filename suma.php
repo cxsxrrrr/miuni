@@ -176,7 +176,7 @@ $payload = [
 <body class="min-h-screen flex items-start justify-center p-6" style="background-image:url('assets/games/bgjuegos.png');background-size:cover;background-position:center;background-repeat:no-repeat;background-attachment:fixed;">
   <main class="w-full max-w-5xl mx-auto">
     <header class="mb-4 flex flex-wrap items-center justify-between gap-3 text-white drop-shadow">
-      <a href="sumas.php" class="text-sm hover:underline">← Volver a la lista</a>
+      <a href="sumas.php" class="text-sm bg-slate-900/70 hover:bg-slate-900 px-3 py-1 rounded-lg shadow">← Volver a la lista</a>
       <div class="flex items-center gap-3 text-xs uppercase tracking-wide">
         <span>Completados <span id="progress-count"><?php echo $completed; ?></span> / <?php echo $total; ?></span>
       </div>
@@ -240,9 +240,9 @@ $payload = [
       </div>
 
       <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mt-6">
-        <button type="button" id="checkBtn" class="px-5 py-3 rounded-xl bg-emerald-500 text-white font-semibold shadow hover:bg-emerald-600 transition">Verificar resultado</button>
-        <button type="button" id="resetSlots" class="px-5 py-3 rounded-xl bg-white/80 text-rose-600 border border-rose-200 font-semibold hover:bg-rose-50 transition">Vaciar respuesta</button>
-        <button type="button" id="skipBtn" class="px-5 py-3 rounded-xl bg-white/80 text-rose-600 border border-rose-200 font-semibold hover:bg-rose-50 transition">Volver a la lista</button>
+        <button type="button" id="checkBtn" class="px-5 py-3 rounded-xl bg-emerald-600 text-white font-semibold shadow hover:bg-emerald-700 transition">Verificar resultado</button>
+        <button type="button" id="resetSlots" class="px-5 py-3 rounded-xl bg-slate-900/70 text-white font-semibold shadow hover:bg-slate-900 transition">Vaciar respuesta</button>
+        <button type="button" id="skipBtn" class="px-5 py-3 rounded-xl bg-rose-600 text-white font-semibold shadow hover:bg-rose-700 transition">Volver a la lista</button>
       </div>
 
       <div id="toast" class="fixed right-6 top-6 z-50 max-w-xs hidden"></div>
