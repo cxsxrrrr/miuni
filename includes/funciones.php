@@ -299,6 +299,102 @@ if (!function_exists('miuni_ensure_user_exercises')) {
 	}
 }
 
+if (!function_exists('miuni_reset_user_exercises')) {
+	function miuni_reset_user_exercises(PDO $pdo, int $userId, int $tipoId, int $target = 8): void
+	{
+		miuni_ensure_ejercicios_schema($pdo);
+		$columns = miuni_get_ejercicios_sum_column_names($pdo);
+		$legacy = miuni_get_ejercicios_oper_column_names($pdo);
+
+		$manageTransaction = !$pdo->inTransaction();
+		if ($manageTransaction) {
+			$pdo->beginTransaction();
+		}
+
+		$needEnsureAfter = false;
+
+		try {
+			$selectActive = $pdo->prepare('SELECT id FROM ejercicios_usuario WHERE usuario_id = :uid AND tipo_id = :tid AND activo = 1 ORDER BY fecha_creacion ASC, id ASC');
+			$selectActive->execute([':uid' => $userId, ':tid' => $tipoId]);
+			$activeIds = $selectActive->fetchAll(PDO::FETCH_COLUMN);
+			$activeIds = array_map('intval', $activeIds ?: []);
+			$idsToReset = array_slice($activeIds, 0, $target);
+
+			if (empty($idsToReset)) {
+				$needEnsureAfter = true;
+				if ($manageTransaction && $pdo->inTransaction()) {
+					$pdo->commit();
+				}
+			} else {
+				$setParts = [
+					sprintf('%s = :uno', $columns['uno']),
+					sprintf('%s = :dos', $columns['dos']),
+					'respuesta_usuario = NULL',
+					'resuelto = 0',
+					'correcto = 0',
+					'activo = 1',
+					'fecha_creacion = :fecha'
+				];
+
+				if ($legacy['uno'] && $legacy['uno'] !== $columns['uno']) {
+					$setParts[] = sprintf('%s = :uno', $legacy['uno']);
+				}
+				if ($legacy['dos'] && $legacy['dos'] !== $columns['dos']) {
+					$setParts[] = sprintf('%s = :dos', $legacy['dos']);
+				}
+
+				$updateSql = sprintf(
+					'UPDATE ejercicios_usuario SET %s WHERE id = :id AND usuario_id = :uid',
+					implode(', ', $setParts)
+				);
+				$updateStmt = $pdo->prepare($updateSql);
+
+				foreach ($idsToReset as $exerciseId) {
+					$top = miuni_random_int(10000, 99999);
+					$bottom = miuni_random_int(10, 99);
+					$params = [
+						':uno' => $top,
+						':dos' => $bottom,
+						':fecha' => date('Y-m-d H:i:s'),
+						':id' => (int)$exerciseId,
+						':uid' => $userId
+					];
+					$updateStmt->execute($params);
+				}
+
+				$extraIds = array_values(array_diff($activeIds, $idsToReset));
+				if (!empty($extraIds)) {
+					$placeholders = implode(', ', array_fill(0, count($extraIds), '?'));
+					$deactivateSql = sprintf(
+						'UPDATE ejercicios_usuario SET activo = 0, respuesta_usuario = NULL, resuelto = 0, correcto = 0 WHERE usuario_id = ? AND tipo_id = ? AND id IN (%s)',
+						$placeholders
+					);
+					$params = array_merge([$userId, $tipoId], array_map('intval', $extraIds));
+					$deactivateStmt = $pdo->prepare($deactivateSql);
+					$deactivateStmt->execute($params);
+				}
+
+				if (count($idsToReset) < $target) {
+					$needEnsureAfter = true;
+				}
+
+				if ($manageTransaction && $pdo->inTransaction()) {
+					$pdo->commit();
+				}
+			}
+		} catch (Throwable $e) {
+			if ($manageTransaction && $pdo->inTransaction()) {
+				$pdo->rollBack();
+			}
+			throw $e;
+		}
+
+		if ($needEnsureAfter) {
+			miuni_ensure_user_exercises($pdo, $userId, $tipoId, $target);
+		}
+	}
+}
+
 if (!function_exists('miuni_count_completed_exercises')) {
 	function miuni_count_completed_exercises(array $exercises): int
 	{

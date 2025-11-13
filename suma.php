@@ -17,13 +17,17 @@ if (!$exerciseId) {
 
 try {
   $tipoId = miuni_get_or_create_tipo_id($pdo, 'suma');
+  miuni_ensure_ejercicios_schema($pdo);
+  $columns = miuni_get_ejercicios_sum_column_names($pdo);
 
-  $exerciseStmt = $pdo->prepare(
-    'SELECT id, sumando_uno, sumando_dos, respuesta_usuario, resuelto, correcto
+  $exerciseStmt = $pdo->prepare(sprintf(
+    'SELECT id, %1$s AS sumando_uno, %2$s AS sumando_dos, respuesta_usuario, resuelto, correcto
      FROM ejercicios_usuario
      WHERE id = :id AND usuario_id = :uid AND tipo_id = :tid AND activo = 1
-     LIMIT 1'
-  );
+     LIMIT 1',
+    $columns['uno'],
+    $columns['dos']
+  ));
   $exerciseStmt->execute([
     ':id' => $exerciseId,
     ':uid' => $userId,

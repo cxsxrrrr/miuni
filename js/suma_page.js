@@ -125,6 +125,10 @@
   checkBtn?.addEventListener('click', checkAnswer);
 
   skipBtn?.addEventListener('click', () => {
+    if (exercise.status && exercise.status !== 'pending') {
+      window.location.href = 'sumas.php';
+      return;
+    }
     markResult('pending').finally(() => {
       window.location.href = 'sumas.php';
     });

@@ -13,8 +13,7 @@ try {
   $tipoId = miuni_get_or_create_tipo_id($pdo, 'suma');
 
   if (isset($_GET['reset'])) {
-    $resetStmt = $pdo->prepare('UPDATE ejercicios_usuario SET activo = 0 WHERE usuario_id = :uid AND tipo_id = :tid AND activo = 1');
-    $resetStmt->execute([':uid' => $userId, ':tid' => $tipoId]);
+	miuni_reset_user_exercises($pdo, $userId, $tipoId, 8);
     header('Location: sumas.php');
     exit;
   }
