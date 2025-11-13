@@ -13,12 +13,12 @@ try {
   $tipoId = miuni_get_or_create_tipo_id($pdo, 'suma');
 
   if (isset($_GET['reset'])) {
-	miuni_reset_user_exercises($pdo, $userId, $tipoId, 8);
+	miuni_reset_user_exercises($pdo, $userId, $tipoId, 8, 'suma');
     header('Location: sumas.php');
     exit;
   }
 
-  $exercises = miuni_ensure_user_exercises($pdo, $userId, $tipoId, 8);
+  $exercises = miuni_ensure_user_exercises($pdo, $userId, $tipoId, 8, 'suma');
   $completed = miuni_count_completed_exercises($exercises);
   $total = count($exercises);
 } catch (Throwable $e) {

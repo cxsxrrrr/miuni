@@ -243,7 +243,7 @@ if (!function_exists('miuni_fetch_user_exercises')) {
 }
 
 if (!function_exists('miuni_ensure_user_exercises')) {
-	function miuni_ensure_user_exercises(PDO $pdo, int $userId, int $tipoId, int $target = 8): array
+	function miuni_ensure_user_exercises(PDO $pdo, int $userId, int $tipoId, int $target = 8, string $operation = 'suma'): array
 	{
 		miuni_ensure_ejercicios_schema($pdo);
 		$exercises = miuni_fetch_user_exercises($pdo, $userId, $tipoId);
@@ -282,6 +282,11 @@ if (!function_exists('miuni_ensure_user_exercises')) {
 			for ($i = 0; $i < $needed; $i++) {
 				$top = miuni_random_int(10000, 99999);
 				$bottom = miuni_random_int(10, 99);
+				if ($operation === 'resta' && $bottom > $top) {
+					$swap = $top;
+					$top = $bottom;
+					$bottom = $swap;
+				}
 					$params = [$userId, $tipoId, $top, $bottom];
 					if ($hasLegacyUno) {
 						$params[] = $top;
@@ -300,7 +305,7 @@ if (!function_exists('miuni_ensure_user_exercises')) {
 }
 
 if (!function_exists('miuni_reset_user_exercises')) {
-	function miuni_reset_user_exercises(PDO $pdo, int $userId, int $tipoId, int $target = 8): void
+	function miuni_reset_user_exercises(PDO $pdo, int $userId, int $tipoId, int $target = 8, string $operation = 'suma'): void
 	{
 		miuni_ensure_ejercicios_schema($pdo);
 		$columns = miuni_get_ejercicios_sum_column_names($pdo);
@@ -357,6 +362,11 @@ if (!function_exists('miuni_reset_user_exercises')) {
 				foreach ($idsToReset as $exerciseId) {
 					$top = miuni_random_int(10000, 99999);
 					$bottom = miuni_random_int(10, 99);
+					if ($operation === 'resta' && $bottom > $top) {
+						$swap = $top;
+						$top = $bottom;
+						$bottom = $swap;
+					}
 					$params = [];
 					foreach ($order as $key) {
 						$params[] = $key === 'uno' ? $top : $bottom;
@@ -394,7 +404,7 @@ if (!function_exists('miuni_reset_user_exercises')) {
 		}
 
 		if ($needEnsureAfter) {
-			miuni_ensure_user_exercises($pdo, $userId, $tipoId, $target);
+			miuni_ensure_user_exercises($pdo, $userId, $tipoId, $target, $operation);
 		}
 	}
 }

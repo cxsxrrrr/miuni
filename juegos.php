@@ -27,7 +27,7 @@ require_login();
         <p class="mt-2 text-sm text-gray-600">Practica sumas con números grandes, paso a paso.</p>
       </a>
 
-      <a href="resta.php" class="block rounded-xl p-6 bg-white shadow hover:scale-105 transition transform">
+  <a href="restas.php" class="block rounded-xl p-6 bg-white shadow hover:scale-105 transition transform">
         <h2 class="text-xl font-bold text-sky-800">Resta: 5 dígitos - 2 cifras</h2>
         <p class="mt-2 text-sm text-gray-600">Sustracciones con llevadas, con explicación visual.</p>
       </a>
