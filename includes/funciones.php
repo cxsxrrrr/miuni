@@ -326,25 +326,30 @@ if (!function_exists('miuni_reset_user_exercises')) {
 					$pdo->commit();
 				}
 			} else {
-				$setParts = [
-					sprintf('%s = :uno', $columns['uno']),
-					sprintf('%s = :dos', $columns['dos']),
-					'respuesta_usuario = NULL',
-					'resuelto = 0',
-					'correcto = 0',
-					'activo = 1',
-					'fecha_creacion = :fecha'
-				];
+				$setParts = [];
+				$order = [];
+
+				$setParts[] = sprintf('%s = ?', $columns['uno']);
+				$order[] = 'uno';
+				$setParts[] = sprintf('%s = ?', $columns['dos']);
+				$order[] = 'dos';
+				$setParts[] = 'respuesta_usuario = NULL';
+				$setParts[] = 'resuelto = 0';
+				$setParts[] = 'correcto = 0';
+				$setParts[] = 'activo = 1';
+				$setParts[] = 'fecha_creacion = NOW()';
 
 				if ($legacy['uno'] && $legacy['uno'] !== $columns['uno']) {
-					$setParts[] = sprintf('%s = :uno', $legacy['uno']);
+					$setParts[] = sprintf('%s = ?', $legacy['uno']);
+					$order[] = 'uno';
 				}
 				if ($legacy['dos'] && $legacy['dos'] !== $columns['dos']) {
-					$setParts[] = sprintf('%s = :dos', $legacy['dos']);
+					$setParts[] = sprintf('%s = ?', $legacy['dos']);
+					$order[] = 'dos';
 				}
 
 				$updateSql = sprintf(
-					'UPDATE ejercicios_usuario SET %s WHERE id = :id AND usuario_id = :uid',
+					'UPDATE ejercicios_usuario SET %s WHERE id = ? AND usuario_id = ?',
 					implode(', ', $setParts)
 				);
 				$updateStmt = $pdo->prepare($updateSql);
@@ -352,13 +357,12 @@ if (!function_exists('miuni_reset_user_exercises')) {
 				foreach ($idsToReset as $exerciseId) {
 					$top = miuni_random_int(10000, 99999);
 					$bottom = miuni_random_int(10, 99);
-					$params = [
-						':uno' => $top,
-						':dos' => $bottom,
-						':fecha' => date('Y-m-d H:i:s'),
-						':id' => (int)$exerciseId,
-						':uid' => $userId
-					];
+					$params = [];
+					foreach ($order as $key) {
+						$params[] = $key === 'uno' ? $top : $bottom;
+					}
+					$params[] = (int)$exerciseId;
+					$params[] = $userId;
 					$updateStmt->execute($params);
 				}
 
