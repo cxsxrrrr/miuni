@@ -21,6 +21,25 @@ require_login();
     background-repeat: no-repeat;
     border-radius: 0.75rem;
     box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #ffffff;
+    min-height: 220px;
+  }
+  .option-card h2 {
+    font-weight: 800;
+    font-size: 1.3rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .option-card p {
+    margin-top: 0.75rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #ffffff;
   }
   .carousel {
     position: relative;
@@ -90,21 +109,21 @@ require_login();
     <section class="carousel" aria-label="Ejercicios disponibles">
       <div class="carousel-track" id="exerciseTrack">
       <article class="carousel-slide">
-        <a href="sumas.php" class="option-card block h-full p-6 transition transform text-rose-700">
-        <h2 class="text-xl font-bold">Suma: 5 dígitos + 2 cifras</h2>
-        <p class="mt-2 text-sm font-semibold">Practica sumas con números grandes, paso a paso.</p>
+        <a href="sumas.php" class="option-card block h-full p-8 transition transform">
+        <h2>Suma: 5 dígitos + 2 cifras</h2>
+        <p>Practica sumas con números grandes, paso a paso.</p>
         </a>
       </article>
       <article class="carousel-slide">
-        <a href="restas.php" class="option-card block h-full p-6 transition transform text-rose-700">
-        <h2 class="text-xl font-bold">Resta: 5 dígitos - 2 cifras</h2>
-        <p class="mt-2 text-sm font-semibold">Sustracciones con llevadas, con explicación visual.</p>
+        <a href="restas.php" class="option-card block h-full p-8 transition transform">
+        <h2>Resta: 5 dígitos - 2 cifras</h2>
+        <p>Sustracciones con llevadas, con explicación visual.</p>
         </a>
       </article>
       <article class="carousel-slide">
-        <a href="combinadas.php" class="option-card block h-full p-6 transition transform text-rose-700">
-        <h2 class="text-xl font-bold">Combinadas: 4 sumas y 4 restas</h2>
-        <p class="mt-2 text-sm font-semibold">Alterna operaciones y fortalece ambas habilidades.</p>
+        <a href="combinadas.php" class="option-card block h-full p-8 transition transform">
+        <h2>Combinadas: 4 sumas y 4 restas</h2>
+        <p>Alterna operaciones y fortalece ambas habilidades.</p>
         </a>
       </article>
       </div>
@@ -139,8 +158,9 @@ require_login();
       const getSlideWidth = () => (container ? container.offsetWidth : track.offsetWidth || 1);
 
       const updateTransform = (immediate = false) => {
+      const offset = -index * getSlideWidth();
       track.style.transition = immediate ? 'none' : 'transform 0.3s ease';
-      track.style.transform = `translateX(-${index * 100}%)`;
+      track.style.transform = `translateX(${offset}px)`;
       indicators.forEach((dot, dotIndex) => {
         dot.setAttribute('aria-current', dotIndex === index ? 'true' : 'false');
       });
