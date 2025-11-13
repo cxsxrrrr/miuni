@@ -32,9 +32,9 @@ require_login();
         <p class="mt-2 text-sm text-gray-600">Sustracciones con llevadas, con explicación visual.</p>
       </a>
 
-      <a href="mixed.php" class="block rounded-xl p-6 bg-white shadow hover:scale-105 transition transform">
-        <h2 class="text-xl font-bold text-sky-800">Mezcla: Sumas y Restas</h2>
-        <p class="mt-2 text-sm text-gray-600">Combina operaciones para practicar ambas habilidades.</p>
+      <a href="combinadas.php" class="block rounded-xl p-6 bg-white shadow hover:scale-105 transition transform">
+        <h2 class="text-xl font-bold text-sky-800">Combinadas: 4 sumas y 4 restas</h2>
+        <p class="mt-2 text-sm text-gray-600">Alterna operaciones y fortalece ambas habilidades.</p>
       </a>
     </section>
   </main>
