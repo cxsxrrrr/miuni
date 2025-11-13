@@ -61,7 +61,7 @@ try {
 		.badge-op { font-size: 0.7rem; letter-spacing: 0.08em; }
 	</style>
 </head>
-<body class="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-white p-6">
+<body class="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-white p-6" style="background-image:url('assets/games/bgselector.png');background-size:cover;background-position:center;background-repeat:no-repeat;background-attachment:fixed;">
 	<main class="max-w-5xl mx-auto">
 		<header class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
 			<div>

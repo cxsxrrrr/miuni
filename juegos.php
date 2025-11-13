@@ -14,7 +14,7 @@ require_login();
   <title>MiUniKids | Ejercicios</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="min-h-screen bg-gradient-to-br from-pink-50 via-rose-50 to-white flex items-center justify-center p-6">
+<body class="min-h-screen bg-gradient-to-br from-pink-50 via-rose-50 to-white flex items-center justify-center p-6" style="background-image:url('assets/games/bgselector.png');background-size:cover;background-position:center;background-repeat:no-repeat;background-attachment:fixed;">
   <main class="max-w-4xl w-full">
     <header class="mb-6 flex items-center justify-between">
       <h1 class="text-3xl font-extrabold text-rose-800">Ejercicios · MiUniKids</h1>
