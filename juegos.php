@@ -27,7 +27,9 @@ require_login();
     align-items: center;
     text-align: center;
     color: #ffffff;
-    min-height: 220px;
+    padding: 2.5rem 2rem;
+    text-decoration: none;
+    height: 100%;
   }
   .option-card h2 {
     font-weight: 800;
@@ -53,7 +55,9 @@ require_login();
   }
   .carousel-slide {
     min-width: 100%;
-    padding: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
     box-sizing: border-box;
   }
   .carousel-nav {
@@ -128,8 +132,8 @@ require_login();
       </article>
       </div>
       <div class="carousel-nav" aria-hidden="true">
-      <button type="button" class="carousel-button" data-direction="prev">←</button>
-      <button type="button" class="carousel-button" data-direction="next">→</button>
+      <button type="button" class="carousel-button" data-direction="prev">&lt;</button>
+      <button type="button" class="carousel-button" data-direction="next">&gt;</button>
       </div>
     </section>
     <div class="carousel-indicators" role="tablist" aria-label="Paginador de ejercicios">
@@ -150,17 +154,21 @@ require_login();
       let index = 0;
       let startX = 0;
       let isDragging = false;
-      let currentOffset = 0;
+      let baseOffset = 0;
       let pointerId = null;
       let hasMoved = false;
 
       const clampIndex = (value) => Math.max(0, Math.min(slides.length - 1, value));
-      const getSlideWidth = () => (container ? container.offsetWidth : track.offsetWidth || 1);
+      const getSlideWidth = () => (container ? container.getBoundingClientRect().width : track.getBoundingClientRect().width) || 1;
+
+      const setTransform = (value, immediate = false) => {
+      track.style.transition = immediate ? 'none' : 'transform 0.3s ease';
+      track.style.transform = `translate3d(${value}px, 0, 0)`;
+      };
 
       const updateTransform = (immediate = false) => {
       const offset = -index * getSlideWidth();
-      track.style.transition = immediate ? 'none' : 'transform 0.3s ease';
-      track.style.transform = `translateX(${offset}px)`;
+      setTransform(offset, immediate);
       indicators.forEach((dot, dotIndex) => {
         dot.setAttribute('aria-current', dotIndex === index ? 'true' : 'false');
       });
@@ -172,7 +180,7 @@ require_login();
       hasMoved = false;
       pointerId = event.pointerId;
       startX = event.clientX;
-      currentOffset = -index * getSlideWidth();
+      baseOffset = -index * getSlideWidth();
       track.style.transition = 'none';
       track.setPointerCapture(pointerId);
       };
@@ -180,22 +188,38 @@ require_login();
       const onDrag = (event) => {
       if (!isDragging || event.pointerId !== pointerId) { return; }
       const delta = event.clientX - startX;
-      hasMoved = hasMoved || Math.abs(delta) > 5;
-      const offset = currentOffset + delta;
-      track.style.transform = `translateX(${offset}px)`;
+      hasMoved = hasMoved || Math.abs(delta) > 6;
+      const slideWidth = getSlideWidth();
+      const overshoot = Math.min(slideWidth * 0.25, 120);
+      const minOffset = -(slides.length - 1) * slideWidth;
+      const rawOffset = baseOffset + delta;
+      const clampedOffset = Math.max(Math.min(rawOffset, overshoot), minOffset - overshoot);
+      setTransform(clampedOffset, true);
       };
 
       const endDrag = (event) => {
       if (!isDragging || event.pointerId !== pointerId) { return; }
-      isDragging = false;
       track.releasePointerCapture(pointerId);
+      isDragging = false;
       const delta = event.clientX - startX;
-      const threshold = getSlideWidth() * 0.2;
-      if (Math.abs(delta) > threshold) {
-        index = clampIndex(index + (delta < 0 ? 1 : -1));
+      const slideWidth = getSlideWidth();
+      const threshold = Math.max(slideWidth * 0.18, 48);
+      if (Math.abs(delta) >= threshold) {
+        if (delta < 0) {
+        index = clampIndex(index + 1);
+        } else {
+        index = clampIndex(index - 1);
+        }
       }
       updateTransform();
       pointerId = null;
+      };
+
+      const cancelDrag = () => {
+      if (!isDragging) { return; }
+      isDragging = false;
+      pointerId = null;
+      updateTransform();
       };
 
       const handleButton = (event) => {
@@ -215,8 +239,13 @@ require_login();
       track.addEventListener('pointerdown', beginDrag);
       track.addEventListener('pointermove', onDrag);
       track.addEventListener('pointerup', endDrag);
-      track.addEventListener('pointercancel', endDrag);
-      track.addEventListener('lostpointercapture', () => { isDragging = false; pointerId = null; updateTransform(); });
+      track.addEventListener('pointercancel', cancelDrag);
+      track.addEventListener('lostpointercapture', cancelDrag);
+      track.addEventListener('pointerleave', (event) => {
+      if (isDragging && event.pointerId === pointerId) {
+        endDrag(event);
+      }
+      });
 
       buttons.forEach((button) => button.addEventListener('click', handleButton));
       indicators.forEach((dot) => dot.addEventListener('click', handleIndicator));
