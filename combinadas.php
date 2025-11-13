@@ -65,18 +65,18 @@ try {
 <body class="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-white p-6" style="background-image:url('assets/games/bgselector.png');background-size:cover;background-position:center;background-repeat:no-repeat;background-attachment:fixed;">
 	<main class="max-w-5xl mx-auto">
 		<header class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8 text-white">
-			<div>
-				<h1 class="text-3xl font-extrabold text-white">Ejercicios Combinados</h1>
-				<p class="text-sm text-white/80">Practica sumas y restas en un solo lugar.</p>
+			<div class="flex flex-col gap-2">
+				<h1 class="inline-block px-3 py-1 rounded-lg bg-emerald-900/85 text-3xl font-extrabold text-white">Ejercicios Combinados</h1>
+				<p class="inline-block px-3 py-1 rounded-lg bg-emerald-900/70 text-sm text-white">Practica sumas y restas en un solo lugar.</p>
 			</div>
 			<div class="flex items-center gap-3">
-				<span class="px-3 py-1 rounded-full bg-emerald-600 text-white text-sm font-semibold shadow">Completados: <?php echo $completed; ?>/<?php echo $total; ?></span>
+				<span class="px-3 py-1 rounded-full bg-emerald-900/80 text-white text-sm font-semibold shadow">Completados: <?php echo $completed; ?>/<?php echo $total; ?></span>
 				<a href="?reset=1" class="px-3 py-1 text-sm rounded-lg bg-rose-600 text-white font-semibold shadow hover:bg-rose-700 transition">Reiniciar</a>
 			</div>
 		</header>
 
 		<nav class="mb-6">
-			<a href="juegos.php" class="inline-flex items-center text-sm text-white bg-slate-900/70 hover:bg-slate-900 rounded-lg px-3 py-1 shadow">← Volver a ejercicios</a>
+			<a href="juegos.php" class="inline-flex items-center text-sm text-white bg-emerald-900/80 hover:bg-emerald-900 rounded-lg px-3 py-1 shadow">← Volver a ejercicios</a>
 		</nav>
 
 		<section class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

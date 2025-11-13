@@ -47,17 +47,17 @@ try {
   <main class="max-w-5xl mx-auto">
     <header class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
       <div>
-        <h1 class="text-3xl font-extrabold text-white">Ejercicios de Suma</h1>
-        <p class="text-sm text-white/80">Selecciona un ejercicio para resolverlo mediante arrastre de números.</p>
+        <h1 class="inline-block px-4 py-2 rounded-xl bg-emerald-900/85 text-3xl font-extrabold text-white shadow">Ejercicios de Suma</h1>
+        <p class="inline-block mt-2 px-3 py-1 rounded-lg bg-emerald-800/80 text-sm text-white shadow-sm">Selecciona un ejercicio para resolverlo mediante arrastre de números.</p>
       </div>
       <div class="flex items-center gap-3">
-        <span class="px-3 py-1 rounded-full bg-emerald-600 text-white text-sm font-semibold shadow">Completados: <?php echo $completed; ?>/<?php echo $total; ?></span>
+        <span class="px-3 py-1 rounded-full bg-emerald-900/80 text-white text-sm font-semibold shadow">Completados: <?php echo $completed; ?>/<?php echo $total; ?></span>
         <a href="?reset=1" class="px-3 py-1 text-sm rounded-lg bg-rose-600 text-white font-semibold shadow hover:bg-rose-700 transition">Reiniciar</a>
       </div>
     </header>
 
     <nav class="mb-6">
-  <a href="juegos.php" class="inline-flex items-center text-sm text-white bg-slate-900/70 hover:bg-slate-900 rounded-lg px-3 py-1 shadow">← Volver a ejercicios</a>
+  <a href="juegos.php" class="inline-flex items-center text-sm text-white bg-emerald-900/80 hover:bg-emerald-900 rounded-lg px-3 py-1 shadow">← Volver a ejercicios</a>
     </nav>
 
     <section class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
