@@ -19,21 +19,6 @@ require_login();
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    position: relative;
-    overflow: hidden;
-  }
-  .option-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: rgba(9, 64, 44, 0.55);
-    transition: background 0.2s ease-in-out;
-  }
-  .option-card:hover::before {
-    background: rgba(9, 64, 44, 0.45);
-  }
-  .option-card > * {
-    position: relative;
   }
   </style>
 </head>
@@ -45,19 +30,19 @@ require_login();
     </header>
 
     <section class="grid gap-6 grid-cols-1 sm:grid-cols-2">
-      <a href="sumas.php" class="option-card block rounded-xl p-6 shadow hover:scale-105 transition transform text-white">
-        <h2 class="text-xl font-bold drop-shadow">Suma: 5 dígitos + 2 cifras</h2>
-        <p class="mt-2 text-sm text-emerald-100 drop-shadow">Practica sumas con números grandes, paso a paso.</p>
+      <a href="sumas.php" class="option-card block rounded-xl p-6 shadow hover:scale-105 transition transform text-rose-700">
+        <h2 class="text-xl font-bold">Suma: 5 dígitos + 2 cifras</h2>
+        <p class="mt-2 text-sm">Practica sumas con números grandes, paso a paso.</p>
       </a>
 
-	  <a href="restas.php" class="option-card block rounded-xl p-6 shadow hover:scale-105 transition transform text-white">
-        <h2 class="text-xl font-bold drop-shadow">Resta: 5 dígitos - 2 cifras</h2>
-        <p class="mt-2 text-sm text-emerald-100 drop-shadow">Sustracciones con llevadas, con explicación visual.</p>
+	  <a href="restas.php" class="option-card block rounded-xl p-6 shadow hover:scale-105 transition transform text-rose-700">
+        <h2 class="text-xl font-bold">Resta: 5 dígitos - 2 cifras</h2>
+        <p class="mt-2 text-sm">Sustracciones con llevadas, con explicación visual.</p>
       </a>
 
-      <a href="combinadas.php" class="option-card block rounded-xl p-6 shadow hover:scale-105 transition transform text-white">
-        <h2 class="text-xl font-bold drop-shadow">Combinadas: 4 sumas y 4 restas</h2>
-        <p class="mt-2 text-sm text-emerald-100 drop-shadow">Alterna operaciones y fortalece ambas habilidades.</p>
+      <a href="combinadas.php" class="option-card block rounded-xl p-6 shadow hover:scale-105 transition transform text-rose-700">
+        <h2 class="text-xl font-bold">Combinadas: 4 sumas y 4 restas</h2>
+        <p class="mt-2 text-sm">Alterna operaciones y fortalece ambas habilidades.</p>
       </a>
     </section>
   </main>
