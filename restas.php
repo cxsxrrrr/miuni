@@ -25,6 +25,19 @@ try {
 	$exercises = miuni_fetch_user_exercises($pdo, $userId, $tipoId);
 	$completed = miuni_count_completed_exercises($exercises);
 	$total = count($exercises);
+
+	$lockedExerciseId = null;
+	foreach ($exercises as $exercise) {
+		if ((int)$exercise['resuelto'] === 1 && (int)$exercise['correcto'] === 0) {
+			$lockedExerciseId = (int)$exercise['id'];
+			break;
+		}
+	}
+
+	if ($lockedExerciseId !== null) {
+		header('Location: resta.php?id=' . $lockedExerciseId);
+		exit;
+	}
 } catch (Throwable $e) {
 	$message = 'Error cargando ejercicios: ' . $e->getMessage();
 	error_log($message);

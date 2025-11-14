@@ -21,6 +21,19 @@ try {
   $exercises = miuni_ensure_user_exercises($pdo, $userId, $tipoId, 8, 'suma');
   $completed = miuni_count_completed_exercises($exercises);
   $total = count($exercises);
+
+  $lockedExerciseId = null;
+  foreach ($exercises as $exercise) {
+    if ((int)$exercise['resuelto'] === 1 && (int)$exercise['correcto'] === 0) {
+      $lockedExerciseId = (int)$exercise['id'];
+      break;
+    }
+  }
+
+  if ($lockedExerciseId !== null) {
+    header('Location: suma.php?id=' . $lockedExerciseId);
+    exit;
+  }
 } catch (Throwable $e) {
   $message = 'Error cargando ejercicios: ' . $e->getMessage();
   error_log($message);

@@ -29,6 +29,21 @@ try {
 	$sumExercises = miuni_fetch_user_exercises($pdo, $userId, $tipoSuma);
 	$restExercises = miuni_fetch_user_exercises($pdo, $userId, $tipoResta);
 
+	$lockedExerciseId = null;
+	foreach ([$sumExercises, $restExercises] as $group) {
+		foreach ($group as $exercise) {
+			if ((int)$exercise['resuelto'] === 1 && (int)$exercise['correcto'] === 0) {
+				$lockedExerciseId = (int)$exercise['id'];
+				break 2;
+			}
+		}
+	}
+
+	if ($lockedExerciseId !== null) {
+		header('Location: combinada.php?id=' . $lockedExerciseId);
+		exit;
+	}
+
 	$allExercises = [];
 	foreach ($sumExercises as $exercise) {
 		$exercise['operation'] = 'suma';

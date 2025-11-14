@@ -49,12 +49,6 @@
     });
   };
 
-  const collectAnswer = () => {
-    const digits = slotOrder.map(slotId => getSlotDigit(slotId) ?? '');
-    const joined = digits.join('');
-    return joined.length ? joined : null;
-  };
-
   const normalizeNumericString = (value) => {
     if (value === null || value === undefined) {
       return null;
@@ -118,7 +112,19 @@
       return;
     }
 
-    const relevantDigits = digits.slice(firstFilledIndex);
+    let lastFilledIndex = -1;
+    for (let idx = digits.length - 1; idx >= 0; idx -= 1) {
+      if (digits[idx] !== null) {
+        lastFilledIndex = idx;
+        break;
+      }
+    }
+
+    if (lastFilledIndex < firstFilledIndex) {
+      lastFilledIndex = firstFilledIndex;
+    }
+
+    const relevantDigits = digits.slice(firstFilledIndex, lastFilledIndex + 1);
     if (relevantDigits.some(digit => digit === null)) {
       showToast('Completa la respuesta antes de verificar.', 'info');
       await markResult('pending');

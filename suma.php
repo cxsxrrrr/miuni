@@ -40,6 +40,21 @@ try {
     exit;
   }
 
+  $lockStmt = $pdo->prepare(
+    'SELECT id FROM ejercicios_usuario
+     WHERE usuario_id = :uid AND tipo_id = :tid AND activo = 1 AND resuelto = 1 AND correcto = 0
+     LIMIT 1'
+  );
+  $lockStmt->execute([
+    ':uid' => $userId,
+    ':tid' => $tipoId
+  ]);
+  $lockedExerciseId = $lockStmt->fetchColumn();
+  if ($lockedExerciseId && (int)$lockedExerciseId !== (int)$exercise['id']) {
+    header('Location: suma.php?id=' . (int)$lockedExerciseId);
+    exit;
+  }
+
   $top = (int)$exercise['sumando_uno'];
   $bottom = (int)$exercise['sumando_dos'];
   $sum = $top + $bottom;
