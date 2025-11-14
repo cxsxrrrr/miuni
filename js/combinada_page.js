@@ -96,30 +96,49 @@
 
   const checkAnswer = async () => {
     let allCorrect = true;
+    let isComplete = true;
+    let hasError = false;
 
     slotOrder.forEach((slotId, index) => {
       const expected = expectedDigits[index];
       const value = getSlotDigit(slotId);
 
       if (expected === null) {
-        if (value !== null) {
-          allCorrect = false;
-        }
-        return;
+      if (value !== null) {
+        allCorrect = false;
+        hasError = true;
+      }
+      return;
       }
 
-      if (value === null || value !== expected) {
-        allCorrect = false;
+      if (value === null) {
+      allCorrect = false;
+      isComplete = false;
+      return;
+      }
+
+      if (value !== expected) {
+      allCorrect = false;
+      hasError = true;
       }
     });
 
     const userAnswer = collectAnswer();
 
+    if (!isComplete) {
+      showToast('Completa la respuesta antes de verificar.', 'info');
+      await markResult('pending');
+      return;
+    }
+
     if (allCorrect) {
       showToast(successMessage, 'success');
       checkBtn?.setAttribute('disabled', 'true');
       await markResult('correct', userAnswer);
-    } else {
+      return;
+    }
+
+    if (hasError) {
       showToast('Revisa tu resultado y vuelve a intentarlo.', 'error');
       await markResult('incorrect', userAnswer);
     }
