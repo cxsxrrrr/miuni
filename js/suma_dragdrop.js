@@ -13,22 +13,12 @@ document.addEventListener('DOMContentLoaded', () => {
     drop: 'assets/audio/drop.mp3'
   };
 
-  const audioCache = {};
-
   const playSound = name => {
     const src = soundSources[name];
     if (!src) return;
-    let audio = audioCache[name];
-    if (!audio) {
-      audio = new Audio(src);
-      audio.preload = 'auto';
-      audioCache[name] = audio;
-    }
     try {
-      if (!audio.paused) {
-        audio.pause();
-      }
-      audio.currentTime = 0;
+      const audio = new Audio(src);
+      audio.preload = 'auto';
       audio.play().catch(() => {});
     } catch (err) {
       console.warn('No fue posible reproducir el sonido', err);
@@ -46,8 +36,10 @@ document.addEventListener('DOMContentLoaded', () => {
     clone.setAttribute('data-placed', 'true');
     clone.draggable = true;
 
-    clone.addEventListener('pointerdown', () => playSound('drag'));
-    clone.addEventListener('touchstart', () => playSound('drag'), { passive: true });
+    const triggerDragSound = () => playSound('drag');
+    clone.addEventListener('pointerdown', triggerDragSound);
+    clone.addEventListener('mousedown', triggerDragSound);
+    clone.addEventListener('touchstart', triggerDragSound, { passive: true });
 
     clone.addEventListener('dragstart', e => {
       e.dataTransfer.setData('text/instance', iid);
@@ -95,6 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
   digits.forEach(img => {
     const triggerDragSound = () => playSound('drag');
     img.addEventListener('pointerdown', triggerDragSound);
+    img.addEventListener('mousedown', triggerDragSound);
     img.addEventListener('touchstart', triggerDragSound, { passive: true });
     img.addEventListener('dragstart', ev => {
       const val = img.dataset.value || img.alt || '';
