@@ -179,7 +179,7 @@ $payload = [
     position: absolute;
     left: 42%;
     top: 56%;
-    width: 56%;
+    width: 76%;
     height: 0;
     border-bottom: 4px solid #fff;
     opacity: 0.85;
