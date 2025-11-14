@@ -63,6 +63,37 @@ try {
     exit;
   }
 
+  // --- VERIFICACIÓN REAL ---
+  $tipoId = (int)$exercise['tipo_id'];
+  $expected = null;
+
+  // Obtén los operandos
+  $stmt = $pdo->prepare('SELECT sumando_uno, sumando_dos FROM ejercicios_usuario WHERE id = :id');
+  $stmt->execute([':id' => $exerciseId]);
+  $row = $stmt->fetch();
+
+  if ($row) {
+      $uno = (int)$row['sumando_uno'];
+      $dos = (int)$row['sumando_dos'];
+
+      // Detecta el tipo de operación
+      $tipoSuma = miuni_get_or_create_tipo_id($pdo, 'suma');
+      $tipoResta = miuni_get_or_create_tipo_id($pdo, 'resta');
+      $tipoCombinadaSuma = miuni_get_or_create_tipo_id($pdo, 'combinada_suma');
+      $tipoCombinadaResta = miuni_get_or_create_tipo_id($pdo, 'combinada_resta');
+
+      if ($tipoId === $tipoSuma || $tipoId === $tipoCombinadaSuma) {
+          $expected = $uno + $dos;
+      } elseif ($tipoId === $tipoResta || $tipoId === $tipoCombinadaResta) {
+          $expected = $uno > $dos ? $uno - $dos : $dos - $uno;
+      }
+  }
+
+  if ($expected !== null && $answer !== null) {
+      $status = ((string)(int)$answer === (string)$expected) ? 'correct' : 'incorrect';
+  }
+  // --- FIN VERIFICACIÓN REAL ---
+
   $resuelto = 0;
   $correcto = 0;
   $respuesta = $answer;
