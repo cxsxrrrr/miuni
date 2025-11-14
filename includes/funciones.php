@@ -21,6 +21,130 @@ if (!function_exists('miuni_log_error')) {
 			error_log('MiUni log fallback: ' . $message);
 		}
 	}
+
+		if (!function_exists('miuni_randomize_unresolved_exercises')) {
+			/**
+			 * Re-assign random values to unresolved (resuelto = 0) active exercises for a user and tipo.
+			 * This preserves completed exercises and only refreshes exercises the user hasn't solved yet.
+			 */
+			function miuni_randomize_unresolved_exercises(PDO $pdo, int $userId, int $tipoId, string $operation = 'suma'): void
+			{
+				miuni_ensure_ejercicios_schema($pdo);
+				$columns = miuni_get_ejercicios_sum_column_names($pdo);
+				$legacy = miuni_get_ejercicios_oper_column_names($pdo);
+
+				$select = $pdo->prepare('SELECT id FROM ejercicios_usuario WHERE usuario_id = :uid AND tipo_id = :tid AND activo = 1 AND resuelto = 0 ORDER BY fecha_creacion ASC, id ASC');
+				$select->execute([':uid' => $userId, ':tid' => $tipoId]);
+				$ids = $select->fetchAll(PDO::FETCH_COLUMN);
+				if (empty($ids)) {
+					return;
+				}
+
+				$setParts = [];
+				$order = [];
+				$setParts[] = sprintf('%s = ?', $columns['uno']);
+				$order[] = 'uno';
+				$setParts[] = sprintf('%s = ?', $columns['dos']);
+				$order[] = 'dos';
+
+				if ($legacy['uno'] && $legacy['uno'] !== $columns['uno']) {
+					$setParts[] = sprintf('%s = ?', $legacy['uno']);
+					$order[] = 'uno';
+				}
+				if ($legacy['dos'] && $legacy['dos'] !== $columns['dos']) {
+					$setParts[] = sprintf('%s = ?', $legacy['dos']);
+					$order[] = 'dos';
+				}
+
+				$updateSql = sprintf('UPDATE ejercicios_usuario SET %s WHERE id = ? AND usuario_id = ?', implode(', ', $setParts));
+				$updateStmt = $pdo->prepare($updateSql);
+
+				foreach ($ids as $id) {
+					$top = miuni_random_int(10000, 99999);
+					$bottom = miuni_random_int(10000, 99999);
+					if ($operation === 'resta' && $bottom > $top) {
+						$swap = $top;
+						$top = $bottom;
+						$bottom = $swap;
+					}
+
+					$params = [];
+					foreach ($order as $key) {
+						$params[] = $key === 'uno' ? $top : $bottom;
+					}
+					$params[] = (int)$id;
+					$params[] = $userId;
+
+					try {
+						$updateStmt->execute($params);
+					} catch (Throwable $e) {
+						miuni_log_error('Error randomizando ejercicio '.$id.': '.$e->getMessage());
+					}
+				}
+			}
+		}
+
+		if (!function_exists('miuni_randomize_unresolved_exercises')) {
+			/**
+			 * Re-assign random values to unresolved (resuelto = 0) active exercises for a user and tipo.
+			 * This preserves completed exercises and only refreshes exercises the user hasn't solved yet.
+			 */
+			function miuni_randomize_unresolved_exercises(PDO $pdo, int $userId, int $tipoId, string $operation = 'suma'): void
+			{
+				miuni_ensure_ejercicios_schema($pdo);
+				$columns = miuni_get_ejercicios_sum_column_names($pdo);
+				$legacy = miuni_get_ejercicios_oper_column_names($pdo);
+
+				$select = $pdo->prepare('SELECT id FROM ejercicios_usuario WHERE usuario_id = :uid AND tipo_id = :tid AND activo = 1 AND resuelto = 0 ORDER BY fecha_creacion ASC, id ASC');
+				$select->execute([':uid' => $userId, ':tid' => $tipoId]);
+				$ids = $select->fetchAll(PDO::FETCH_COLUMN);
+				if (empty($ids)) {
+					return;
+				}
+
+				$setParts = [];
+				$order = [];
+				$setParts[] = sprintf('%s = ?', $columns['uno']);
+				$order[] = 'uno';
+				$setParts[] = sprintf('%s = ?', $columns['dos']);
+				$order[] = 'dos';
+
+				if ($legacy['uno'] && $legacy['uno'] !== $columns['uno']) {
+					$setParts[] = sprintf('%s = ?', $legacy['uno']);
+					$order[] = 'uno';
+				}
+				if ($legacy['dos'] && $legacy['dos'] !== $columns['dos']) {
+					$setParts[] = sprintf('%s = ?', $legacy['dos']);
+					$order[] = 'dos';
+				}
+
+				$updateSql = sprintf('UPDATE ejercicios_usuario SET %s WHERE id = ? AND usuario_id = ?', implode(', ', $setParts));
+				$updateStmt = $pdo->prepare($updateSql);
+
+				foreach ($ids as $id) {
+					$top = miuni_random_int(10000, 99999);
+					$bottom = miuni_random_int(10000, 99999);
+					if ($operation === 'resta' && $bottom > $top) {
+						$swap = $top;
+						$top = $bottom;
+						$bottom = $swap;
+					}
+
+					$params = [];
+					foreach ($order as $key) {
+						$params[] = $key === 'uno' ? $top : $bottom;
+					}
+					$params[] = (int)$id;
+					$params[] = $userId;
+
+					try {
+						$updateStmt->execute($params);
+					} catch (Throwable $e) {
+						miuni_log_error('Error randomizando ejercicio '.$id.': '.$e->getMessage());
+					}
+				}
+			}
+		}
 }
 
 if (!function_exists('miuni_random_int')) {
@@ -59,72 +183,13 @@ if (!function_exists('miuni_get_ejercicios_sum_column_names')) {
 			$GLOBALS['MIUNI_EJERCICIOS_COLUMN_CACHE'] = ['uno' => 'sumando_uno', 'dos' => 'sumando_dos'];
 			return $GLOBALS['MIUNI_EJERCICIOS_COLUMN_CACHE'];
 		}
-
-		$sumUno = isset($columns['sumando_uno']) ? 'sumando_uno' : (isset($columns['operando_uno']) ? 'operando_uno' : 'sumando_uno');
-		$sumDos = isset($columns['sumando_dos']) ? 'sumando_dos' : (isset($columns['operando_dos']) ? 'operando_dos' : 'sumando_dos');
-
-		$GLOBALS['MIUNI_EJERCICIOS_COLUMN_CACHE'] = ['uno' => $sumUno, 'dos' => $sumDos];
-		return $GLOBALS['MIUNI_EJERCICIOS_COLUMN_CACHE'];
-	}
-}
-
-if (!function_exists('miuni_get_ejercicios_oper_column_names')) {
-	function miuni_get_ejercicios_oper_column_names(PDO $pdo): array
-	{
-		try {
-			$columns = [];
-			$stmt = $pdo->query('SHOW COLUMNS FROM ejercicios_usuario');
-			while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-				$columns[$row['Field']] = true;
-			}
-		} catch (Throwable $e) {
-			miuni_log_error('No se pudo leer columnas legacy de ejercicios_usuario: ' . $e->getMessage());
-			return ['uno' => null, 'dos' => null];
 		}
 
-		return [
-			'uno' => isset($columns['operando_uno']) ? 'operando_uno' : null,
-			'dos' => isset($columns['operando_dos']) ? 'operando_dos' : null,
-		];
-	}
-}
-
-if (!function_exists('miuni_get_or_create_tipo_id')) {
-	function miuni_get_or_create_tipo_id(PDO $pdo, string $nombre): int
-	{
-		$tipoStmt = $pdo->prepare('SELECT tipo_id FROM tipos_operacion WHERE nombre = :nombre LIMIT 1');
-		$tipoStmt->execute([':nombre' => $nombre]);
-		$tipoId = $tipoStmt->fetchColumn();
-
-		if ($tipoId !== false) {
-			return (int)$tipoId;
-		}
-
-		try {
-			$insertTipo = $pdo->prepare('INSERT INTO tipos_operacion (nombre) VALUES (:nombre)');
-			$insertTipo->execute([':nombre' => $nombre]);
-			return (int)$pdo->lastInsertId();
-		} catch (PDOException $insertException) {
-			if ((int)($insertException->errorInfo[1] ?? 0) === 1062) {
-				$tipoStmt->execute([':nombre' => $nombre]);
-				$tipoId = $tipoStmt->fetchColumn();
-				if ($tipoId !== false) {
-					return (int)$tipoId;
-				}
-			}
-
-			throw $insertException;
-		}
-	}
-}
-
-if (!function_exists('miuni_ensure_ejercicios_schema')) {
-	function miuni_ensure_ejercicios_schema(PDO $pdo): void
-	{
-		static $checked = false;
-		if ($checked) {
+		return $completed;
 			return;
 		}
+
+
 
 		try {
 			$fetchColumns = function () use ($pdo) {
@@ -419,67 +484,6 @@ if (!function_exists('miuni_count_completed_exercises')) {
 			}
 		}
 
-			if (!function_exists('miuni_randomize_unresolved_exercises')) {
-				/**
-				 * Re-assign random values to unresolved (resuelto = 0) active exercises for a user and tipo.
-				 * This preserves completed exercises and only refreshes exercises the user hasn't solved yet.
-				 */
-				function miuni_randomize_unresolved_exercises(PDO $pdo, int $userId, int $tipoId, string $operation = 'suma'): void
-				{
-					miuni_ensure_ejercicios_schema($pdo);
-					$columns = miuni_get_ejercicios_sum_column_names($pdo);
-					$legacy = miuni_get_ejercicios_oper_column_names($pdo);
-
-					$select = $pdo->prepare('SELECT id FROM ejercicios_usuario WHERE usuario_id = :uid AND tipo_id = :tid AND activo = 1 AND resuelto = 0 ORDER BY fecha_creacion ASC, id ASC');
-					$select->execute([':uid' => $userId, ':tid' => $tipoId]);
-					$ids = $select->fetchAll(PDO::FETCH_COLUMN);
-					if (empty($ids)) {
-						return;
-					}
-
-					$setParts = [];
-					$order = [];
-					$setParts[] = sprintf('%s = ?', $columns['uno']);
-					$order[] = 'uno';
-					$setParts[] = sprintf('%s = ?', $columns['dos']);
-					$order[] = 'dos';
-
-					if ($legacy['uno'] && $legacy['uno'] !== $columns['uno']) {
-						$setParts[] = sprintf('%s = ?', $legacy['uno']);
-						$order[] = 'uno';
-					}
-					if ($legacy['dos'] && $legacy['dos'] !== $columns['dos']) {
-						$setParts[] = sprintf('%s = ?', $legacy['dos']);
-						$order[] = 'dos';
-					}
-
-					$updateSql = sprintf('UPDATE ejercicios_usuario SET %s WHERE id = ? AND usuario_id = ?', implode(', ', $setParts));
-					$updateStmt = $pdo->prepare($updateSql);
-
-					foreach ($ids as $id) {
-						$top = miuni_random_int(10000, 99999);
-						$bottom = miuni_random_int(10000, 99999);
-						if ($operation === 'resta' && $bottom > $top) {
-							$swap = $top;
-							$top = $bottom;
-							$bottom = $swap;
-						}
-
-						$params = [];
-						foreach ($order as $key) {
-							$params[] = $key === 'uno' ? $top : $bottom;
-						}
-						$params[] = (int)$id;
-						$params[] = $userId;
-
-						try {
-							$updateStmt->execute($params);
-						} catch (Throwable $e) {
-							miuni_log_error('Error randomizando ejercicio '.$id.': '.$e->getMessage());
-						}
-					}
-				}
-			}
 		return $completed;
 	}
 }
