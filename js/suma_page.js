@@ -232,7 +232,7 @@
     playSound('bad');
     if (!exitWarningShown) {
       exitWarningShown = true;
-      showToast('Revisa tu resultado. Si sales ahora, no podrás repetir este ejercicio.', 'warning');
+      showToast('Revisa tu resultado. Si sales ahora, no podras repetir este ejercicio.', 'warning');
     } else {
       showToast('Revisa tu resultado y vuelve a intentarlo.', 'error');
     }

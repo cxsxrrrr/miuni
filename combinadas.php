@@ -143,7 +143,7 @@ try {
 					<?php if ($status === 'correct'): ?>
 						<p class="mt-2 text-xs text-emerald-200">¡Excelente! Puedes reiniciar para nuevos ejercicios.</p>
 					<?php elseif ($status === 'incorrect'): ?>
-						<p class="mt-2 text-xs text-rose-200">Quedó marcado como incorrecto y no puede reintentarse.</p>
+						<p class="mt-2 text-xs text-rose-200">Quedo marcado como incorrecto y no puede reintentarse.</p>
 					<?php else: ?>
 						<p class="mt-2 text-xs text-white/75">Haz clic para comenzar.</p>
 					<?php endif; ?>

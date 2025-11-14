@@ -251,7 +251,7 @@ $payload = [
           <div class="px-8 pt-12 pb-8 text-center space-y-4">
             <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 text-2xl font-bold shadow-inner">8/8</div>
             <h2 class="text-2xl font-bold">¡Felicitaciones!</h2>
-            <p class="text-sm text-slate-600">Completaste los 8 ejercicios de esta categoría. ¡Sigue practicando para mantenerte al día!</p>
+            <p class="text-sm text-slate-600">Completaste los 8 ejercicios de esta categoria. ¡Sigue practicando para mantenerte al día!</p>
             <button type="button" class="inline-flex items-center justify-center rounded-full bg-emerald-600 px-6 py-2 text-sm font-semibold text-white shadow hover:bg-emerald-700 transition" data-congrats-close>Continuar</button>
           </div>
         </div>

@@ -112,7 +112,7 @@ if (!function_exists('miuni_ensure_ejercicios_schema')) {
         }
 
         try {
-            // Cambios mínimos razonables: renombrar operando_* a sumando_* si están presentes
+            // Cambios minimos razonables: renombrar operando_* a sumando_* si están presentes
             if (isset($columns['operando_uno']) && !isset($columns['sumando_uno'])) {
                 $pdo->exec('ALTER TABLE ejercicios_usuario CHANGE COLUMN operando_uno sumando_uno INT NOT NULL');
                 miuni_reset_ejercicios_column_cache();

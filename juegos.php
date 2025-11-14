@@ -120,13 +120,13 @@ require_login();
       <div class="carousel-track" id="exerciseTrack">
       <article class="carousel-slide">
         <a href="sumas.php" class="option-card block h-full p-8 transition transform">
-        <h2>Suma: 5 dígitos + 2 cifras</h2>
+        <h2>Suma: 5 digitos + 2 cifras</h2>
         <p>Practica sumas con numeros grandes, paso a paso.</p>
         </a>
       </article>
       <article class="carousel-slide">
         <a href="restas.php" class="option-card block h-full p-8 transition transform">
-        <h2>Resta: 5 dígitos - 2 cifras</h2>
+        <h2>Resta: 5 digitos - 2 cifras</h2>
         <p>Sustracciones con llevadas, con explicación visual.</p>
         </a>
       </article>

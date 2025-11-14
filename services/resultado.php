@@ -22,7 +22,7 @@ if (!is_array($input) || !isset($input['exerciseId'])) {
 $exerciseId = filter_var($input['exerciseId'], FILTER_VALIDATE_INT);
 if (!$exerciseId) {
   http_response_code(400);
-  echo json_encode(['error' => 'Identificador inválido']);
+  echo json_encode(['error' => 'Identificador invalido']);
   exit;
 }
 

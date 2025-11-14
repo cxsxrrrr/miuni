@@ -231,7 +231,7 @@
     playSound('bad');
     if (!exitWarningShown) {
       exitWarningShown = true;
-      showToast('Revisa tu resultado. Si sales ahora, no podrás repetir este ejercicio.', 'warning');
+      showToast('Revisa tu resultado. Si sales ahora, no podras repetir este ejercicio.', 'warning');
     } else {
       showToast('Revisa tu resultado y vuelve a intentarlo.', 'error');
     }
@@ -254,7 +254,7 @@
     checkBtn?.removeAttribute('disabled');
     exercise.status = 'pending';
     syncNavigationLock();
-    showToast('La respuesta se limpió. ¡Intenta de nuevo!', 'info');
+    showToast('La respuesta se limpio. ¡Intenta de nuevo!', 'info');
     markResult('pending');
   });
 
