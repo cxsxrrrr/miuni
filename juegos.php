@@ -108,7 +108,7 @@ require_login();
   <main class="max-w-4xl w-full">
     <header class="mb-6 flex items-center justify-between">
       <h1 class="text-3xl font-extrabold text-rose-800">Ejercicios · MiUniKids</h1>
-      <a href="../index.php" class="text-sm text-rose-600 hover:underline">Volver</a>
+      <a href="../index.php" class="text-sm text-rose-600 hover:underline">Cerrar sesión</a>
     </header>
 
     <section class="carousel" aria-label="Ejercicios disponibles">
