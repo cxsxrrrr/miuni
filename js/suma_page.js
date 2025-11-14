@@ -91,20 +91,6 @@
     return Array(padding).fill(null).concat(raw.split(''));
   })();
 
-  // Nueva función para actualizar el estado del botón skip
-  function updateSkipBtn() {
-    if (exercise.status === 'incorrect') {
-      skipBtn?.setAttribute('disabled', 'true');
-      skipBtn?.style.setProperty('opacity', '.5');
-      skipBtn?.style.setProperty('pointer-events', 'none');
-    } else {
-      skipBtn?.removeAttribute('disabled');
-      skipBtn?.style.removeProperty('opacity');
-      skipBtn?.style.removeProperty('pointer-events');
-    }
-  }
-
-  // Modifica checkAnswer para actualizar el botón después de verificar
   const checkAnswer = async () => {
     let allCorrect = true;
 
@@ -129,47 +115,35 @@
     if (allCorrect) {
       showToast('¡Excelente! Has resuelto la suma correctamente.', 'success');
       checkBtn?.setAttribute('disabled', 'true');
-      const data = await markResult('correct', userAnswer);
-      if (data?.status) {
-        exercise.status = data.status;
-      }
+      await markResult('correct', userAnswer);
     } else {
       showToast('Revisa tu resultado y vuelve a intentarlo.', 'error');
-      const data = await markResult('incorrect', userAnswer);
-      if (data?.status) {
-        exercise.status = data.status;
-      }
+      await markResult('incorrect', userAnswer);
     }
-    updateSkipBtn();
   };
 
   checkBtn?.addEventListener('click', checkAnswer);
 
   skipBtn?.addEventListener('click', () => {
-    // Siempre revisa el estado real antes de permitir salir
-    if (exercise.status === 'incorrect') {
-      showToast('Debes responder correctamente o vaciar la respuesta para salir.', 'error');
+    if (exercise.status && exercise.status !== 'pending') {
+      window.location.href = 'sumas.php';
       return;
     }
-    window.location.href = 'sumas.php';
+    markResult('pending').finally(() => {
+      window.location.href = 'sumas.php';
+    });
   });
 
-  resetBtn?.addEventListener('click', async () => {
+  resetBtn?.addEventListener('click', () => {
     clearSlots();
     checkBtn?.removeAttribute('disabled');
-    const data = await markResult('pending');
-    // Usa el estado devuelto por el backend si está disponible
-    if (data?.status) {
-      exercise.status = data.status;
-    } else {
-      exercise.status = 'pending';
-    }
-    updateSkipBtn();
     showToast('La respuesta se limpió. ¡Intenta de nuevo!', 'info');
+    markResult('pending');
   });
 
-  // Llama a la función al cargar la página
-  updateSkipBtn();
+  if (exercise.status === 'correct') {
+    checkBtn?.setAttribute('disabled', 'true');
+  }
 
   const prefillAnswer = () => {
     if (!exercise.answer) return true;
