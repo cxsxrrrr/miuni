@@ -110,7 +110,7 @@ $digitImages = [
 ];
 
 $topSlots = ['t1', 't2', 't3', 't4', 't5'];
-$bottomSlots = ['m1', 'm2', 'm3', 'm4', 'm5'];
+$bottomSlots = ['m5', 'm4', 'm3', 'm1', 'm2'];
 $answerSlots = ['b1', 'b2', 'b3', 'b4', 'b5', 'b6'];
 
 $topDigits = str_split((string)$top);
