@@ -178,7 +178,7 @@ $payload = [
     .suma-linea {
     position: absolute;
     left: 32%;
-    top: 66%;
+    top: 58%;
     width: 76%;
     height: 0;
     border-bottom: 4px solid #fff;
