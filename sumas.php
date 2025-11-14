@@ -36,14 +36,13 @@ try {
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>MiUniKids | Sumas</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="index.css">
   <style>
-    body { font-family: 'Arial Rounded MT Bold', 'Helvetica Rounded', Arial, sans-serif; }
     .card-disabled { pointer-events: none; }
     .exercise-card { background-image: url('assets/games/pizarra.png'); background-size: cover; background-position: center; background-repeat: no-repeat; }
   </style>
 </head>
-<body class="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-white p-6" style="background-image:url('assets/games/bgselector.png');background-size:cover;background-position:center;background-repeat:no-repeat;background-attachment:fixed;">
+<body class="font-sans min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-white p-6" style="background-image:url('assets/games/bgselector.png');background-size:cover;background-position:center;background-repeat:no-repeat;background-attachment:fixed;">
   <main class="max-w-5xl mx-auto">
     <header class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
       <div>

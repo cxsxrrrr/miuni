@@ -206,7 +206,7 @@ $payload = [
 							<img draggable="true" data-value="9" src="assets/games/nueve.png" alt="9" class="digit cursor-grab w-12 h-12 mx-auto">
 							<img draggable="true" data-value="0" src="assets/games/cero.png" alt="0" class="digit cursor-grab w-12 h-12 mx-auto">
 						</div>
-						<div class="mt-2 inline-block px-3 py-1 rounded-lg bg-emerald-900/80 text-sm text-white text-center drop-shadow">Arrastra los números a la pizarra</div>
+						<div class="mt-2 inline-block px-3 py-1 rounded-lg bg-emerald-900/80 text-sm text-white text-center drop-shadow">Arrastra los numeros a la pizarra</div>
 					</div>
 
 					<div id="board-wrap" class="flex-1 flex items-center justify-center" style="position:relative; overflow:visible;">
