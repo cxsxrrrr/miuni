@@ -275,6 +275,17 @@ $successMessage = $operation === 'resta' ? '¡Excelente! Has resuelto la resta c
 			</div>
 
 			<div id="toast" class="fixed right-6 top-6 z-50 max-w-xs hidden"></div>
+			<div id="congratsModal" class="fixed inset-0 z-[60] hidden items-center justify-center bg-black/60 backdrop-blur-sm p-6">
+				<div class="relative w-full max-w-md rounded-3xl bg-white text-slate-800 shadow-2xl overflow-hidden">
+					<button type="button" class="absolute right-4 top-4 text-xl text-slate-500 hover:text-slate-700" data-congrats-close aria-label="Cerrar">×</button>
+					<div class="px-8 pt-12 pb-8 text-center space-y-4">
+						<div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-sky-100 text-sky-600 text-2xl font-bold shadow-inner">8/8</div>
+						<h2 class="text-2xl font-bold">¡Felicitaciones!</h2>
+						<p class="text-sm text-slate-600">Completaste los 8 ejercicios de esta categoría. ¡Sigue practicando para mantenerte al día!</p>
+						<button type="button" class="inline-flex items-center justify-center rounded-full bg-sky-600 px-6 py-2 text-sm font-semibold text-white shadow hover:bg-sky-700 transition" data-congrats-close>Continuar</button>
+					</div>
+				</div>
+			</div>
 		</section>
 	</main>
 

@@ -4,6 +4,7 @@
   const skipBtn = document.getElementById('skipBtn');
   const resetBtn = document.getElementById('resetSlots');
   const palette = document.getElementById('number-palette');
+  const modalEl = document.getElementById('congratsModal');
   const exercise = window.currentExercise || null;
   const getHelpers = () => window.combinadaBoardHelpers || null;
   const messages = window.combinadaMessages || {};
@@ -14,6 +15,13 @@
   }
 
   const slotOrder = exercise.slots?.answer || ['b1', 'b2', 'b3', 'b4', 'b5', 'b6'];
+  const toNumber = value => {
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : 0;
+  };
+  exercise.completed = toNumber(exercise.completed);
+  exercise.total = toNumber(exercise.total);
+  let congratsShown = false;
   let exitWarningShown = exercise.status === 'incorrect';
 
   const toastStyles = {
@@ -21,6 +29,33 @@
     error: { wrapper: 'bg-rose-50 text-rose-700', icon: '⚠' },
     warning: { wrapper: 'bg-amber-50 text-amber-800', icon: '⚠' },
     info: { wrapper: 'bg-white/95 text-slate-700', icon: 'ℹ' }
+  };
+
+  const soundSources = {
+    victory: 'assets/audio/victory.mp3',
+    bad: 'assets/audio/bad.mp3'
+  };
+
+  const audioCache = {};
+
+  const playSound = name => {
+    const src = soundSources[name];
+    if (!src) return;
+    let audio = audioCache[name];
+    if (!audio) {
+      audio = new Audio(src);
+      audio.preload = 'auto';
+      audioCache[name] = audio;
+    }
+    try {
+      if (!audio.paused) {
+        audio.pause();
+      }
+      audio.currentTime = 0;
+      audio.play().catch(() => {});
+    } catch (err) {
+      console.warn('No fue posible reproducir el sonido', err);
+    }
   };
 
   const showToast = (message, tone = 'info') => {
@@ -37,6 +72,37 @@
     const closeBtn = toastEl.querySelector('[data-toast-close]');
     closeBtn?.addEventListener('click', () => toastEl.classList.add('hidden'));
     setTimeout(() => toastEl.classList.add('hidden'), duration);
+  };
+
+  const hideCongratsModal = () => {
+    if (!modalEl) return;
+    modalEl.classList.add('hidden');
+    modalEl.classList.remove('flex');
+  };
+
+  const showCongratsModal = () => {
+    if (!modalEl || congratsShown) return;
+    congratsShown = true;
+    modalEl.classList.remove('hidden');
+    modalEl.classList.add('flex');
+  };
+
+  if (modalEl) {
+    modalEl.querySelectorAll('[data-congrats-close]').forEach(btn => {
+      btn.addEventListener('click', hideCongratsModal);
+    });
+    modalEl.addEventListener('click', event => {
+      if (event.target === modalEl) {
+        hideCongratsModal();
+      }
+    });
+  }
+
+  const maybeShowCongrats = () => {
+    if (congratsShown) return;
+    if (exercise.total === 8 && exercise.completed >= exercise.total) {
+      showCongratsModal();
+    }
   };
 
   const getSlotDigit = slotId => {
@@ -102,6 +168,8 @@
       if (data?.completed !== undefined) {
         const progress = document.getElementById('progress-count');
         if (progress) progress.textContent = data.completed;
+        exercise.completed = toNumber(data.completed);
+        maybeShowCongrats();
       }
       if (data?.status) {
         exercise.status = data.status;
@@ -156,12 +224,14 @@
     }
 
     if (normalizedAnswer === targetValue) {
+      playSound('victory');
       showToast(successMessage, 'success');
       checkBtn?.setAttribute('disabled', 'true');
       await markResult('correct', rawAnswer);
       return;
     }
 
+    playSound('bad');
     if (!exitWarningShown) {
       exitWarningShown = true;
       showToast('Revisa tu resultado. Si sales ahora, no podrás repetir este ejercicio.', 'warning');
@@ -196,6 +266,7 @@
   }
 
   syncNavigationLock();
+  maybeShowCongrats();
 
   const prefillAnswer = () => {
     if (!exercise.answer) return true;

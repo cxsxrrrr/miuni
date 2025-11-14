@@ -8,6 +8,33 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
+  const soundSources = {
+    drag: 'assets/audio/drag.mp3',
+    drop: 'assets/audio/drop.mp3'
+  };
+
+  const audioCache = {};
+
+  const playSound = name => {
+    const src = soundSources[name];
+    if (!src) return;
+    let audio = audioCache[name];
+    if (!audio) {
+      audio = new Audio(src);
+      audio.preload = 'auto';
+      audioCache[name] = audio;
+    }
+    try {
+      if (!audio.paused) {
+        audio.pause();
+      }
+      audio.currentTime = 0;
+      audio.play().catch(() => {});
+    } catch (err) {
+      console.warn('No fue posible reproducir el sonido', err);
+    }
+  };
+
   const makePlacedDigit = value => {
     const val = String(value);
     const src = Array.from(palette.querySelectorAll('.digit')).find(d => (d.dataset.value || d.alt || '') === val);
@@ -23,6 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
       e.dataTransfer.setData('text/instance', iid);
       e.dataTransfer.setData('text/value', val);
       clone.classList.add('dragging');
+      playSound('drag');
       try { e.dataTransfer.setDragImage(clone, clone.width / 2, clone.height / 2); } catch (err) {}
     });
 
@@ -44,12 +72,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const placeDigit = (slotId, value) => {
     const slot = document.querySelector(`.slot[data-slot="${slotId}"]`);
-    if (!slot) return;
+    if (!slot) return false;
     const clone = makePlacedDigit(value);
-    if (!clone) return;
+    if (!clone) return false;
     const existing = slot.querySelector('.digit[data-instance-id]');
     if (existing) existing.remove();
     slot.appendChild(clone);
+    return true;
   };
 
   const clearAllSlots = () => {
@@ -69,6 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
       dragSrcEl = img;
       try { ev.dataTransfer.setDragImage(img, img.width / 2, img.height / 2); } catch (e) {}
       img.classList.add('dragging');
+      playSound('drag');
     });
 
     img.addEventListener('dragend', () => {
@@ -86,7 +116,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const instanceId = ev.dataTransfer.getData('text/instance');
     if (instanceId) {
       const placed = board.querySelector(`.digit[data-instance-id="${instanceId}"]`);
-      if (placed) placed.remove();
+      if (placed) {
+        placed.remove();
+        playSound('drop');
+      }
     }
   });
 
@@ -107,12 +140,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const existing = slot.querySelector('.digit[data-instance-id]');
         if (existing) existing.remove();
         slot.appendChild(placed);
+        playSound('drop');
         return;
       }
 
       // If dropping from the palette (value present) clone a new placed digit
       if (value) {
-        placeDigit(slot.dataset.slot, value);
+        if (placeDigit(slot.dataset.slot, value)) {
+          playSound('drop');
+        }
       }
     });
   });
