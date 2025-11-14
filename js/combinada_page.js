@@ -5,9 +5,46 @@
   const resetBtn = document.getElementById('resetSlots');
   const palette = document.getElementById('number-palette');
   const modalEl = document.getElementById('congratsModal');
+  const boardScaler = document.querySelector('[data-board-scaler]');
+  const boardEl = document.getElementById('board');
   const exercise = window.currentExercise || null;
   const getHelpers = () => window.combinadaBoardHelpers || null;
   const messages = window.combinadaMessages || {};
+
+  const BOARD_BASE_WIDTH = 720;
+  const BOARD_BASE_HEIGHT = 420;
+
+  const setupBoardScaling = () => {
+    if (!boardScaler || !boardEl) {
+      return;
+    }
+
+    const applyScale = () => {
+      const availableWidth = boardScaler.clientWidth;
+      if (!availableWidth) {
+        return;
+      }
+      const scale = Math.min(availableWidth / BOARD_BASE_WIDTH, 1);
+      boardEl.style.transform = `scale(${scale})`;
+      boardEl.style.transformOrigin = 'top left';
+      boardScaler.style.height = `${(BOARD_BASE_HEIGHT * scale).toFixed(2)}px`;
+      boardScaler.style.visibility = 'visible';
+    };
+
+    const scheduleApply = () => window.requestAnimationFrame(applyScale);
+
+    scheduleApply();
+    window.addEventListener('resize', scheduleApply);
+    window.addEventListener('orientationchange', () => setTimeout(applyScale, 100));
+
+    if (typeof ResizeObserver === 'function') {
+      const observer = new ResizeObserver(scheduleApply);
+      observer.observe(boardScaler);
+      boardScaler.__boardResizeObserver = observer;
+    }
+  };
+
+  setupBoardScaling();
 
   if (!exercise) {
     console.warn('No exercise payload found');

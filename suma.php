@@ -148,13 +148,20 @@ $payload = [
   <title>Suma · MiUniKids</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="index.css">
+  <link rel="prefetch" href="assets/audio/victory.mp3" as="audio" type="audio/mpeg">
+  <link rel="prefetch" href="assets/audio/bad.mp3" as="audio" type="audio/mpeg">
+  <link rel="prefetch" href="assets/audio/drag.mp3" as="audio" type="audio/mpeg">
+	<link rel="prefetch" href="assets/audio/drop.mp3" as="audio" type="audio/mpeg">
+  
   <style>
     #exercise{ max-width:1100px; margin:1rem auto; background: transparent; }
     #problem { display:block; }
     #problem .flex { align-items:flex-start; }
     #number-palette{ width:140px; }
     #number-palette .digit{ width:56px; height:56px; user-select:none; }
-    #board{ max-width:820px; height:450px; }
+    #board-wrap{ position:relative; overflow:visible; }
+    [data-board-scaler]{ position:relative; width:min(100%, 720px); margin:0 auto; overflow:hidden; visibility:hidden; }
+    #board{ width:720px; height:420px; background-image:url('assets/games/pizarra.png'); background-size:cover; background-position:center; transform-origin:top left; }
     #number-palette .grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
     .slot{ display:flex; align-items:center; justify-content:center; border-radius:14px; background:rgba(63,99,47,0.38); transform:translateX(-50%); }
     .slot--answer{ cursor:pointer; }
@@ -164,7 +171,6 @@ $payload = [
     .digit.dragging{ opacity:.6; transform:scale(.95); }
     main > header{ margin-bottom:1rem; }
     @media (max-width:768px){
-      #board{ width:100%; height:320px; }
       #number-palette{ width:120px; }
     }
     html, body { height: 100%; }
@@ -200,10 +206,11 @@ $payload = [
             <div class="mt-2 inline-block px-3 py-1 rounded-lg bg-emerald-900/85 text-sm text-white text-center drop-shadow">Arrastra los numeros a la pizarra</div>
           </div>
 
-          <div id="board-wrap" class="flex-1 flex items-center justify-center" style="position:relative; overflow:visible;">
-            <div id="board" class="relative w-full max-w-[720px] h-[420px] rounded-xl overflow-hidden">
-              <div class="board-plus">+</div>
-              <?php foreach ($slotDefinitions as $slotId => $definition): ?>
+          <div id="board-wrap" class="flex-1 flex items-center justify-center">
+            <div class="board-scaler" data-board-scaler>
+              <div id="board" class="relative rounded-xl overflow-hidden">
+                <div class="board-plus">+</div>
+                <?php foreach ($slotDefinitions as $slotId => $definition): ?>
                 <?php
                   $classes = ['slot'];
                   if ($definition['type'] !== 'answer') {
