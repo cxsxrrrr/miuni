@@ -175,6 +175,17 @@ $payload = [
       #board{ width:100%; height:320px; }
       #number-palette{ width:120px; }
     }
+    .suma-linea {
+    position: absolute;
+    left: 42%;
+    top: 56%;
+    width: 56%;
+    height: 0;
+    border-bottom: 4px solid #fff;
+    opacity: 0.85;
+    z-index: 10;
+    transform: translateX(-2%);
+    }
     html, body { height: 100%; }
     body { overflow: hidden; }
     .board-plus{ position:absolute; left:42%; top:36%; font-size:2rem; color:#ffe4ec; font-weight:700; transform:translateX(-50%); pointer-events:none; }
@@ -241,6 +252,8 @@ $payload = [
                   <?php endif; ?>
                 </div>
               <?php endforeach; ?>
+              <!-- Línea de suma -->
+              <div class="suma-linea"></div>
             </div>
           </div>
         </div>
