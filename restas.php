@@ -19,6 +19,10 @@ try {
 	}
 
 	$exercises = miuni_ensure_user_exercises($pdo, $userId, $tipoId, 8, 'resta');
+	// Randomize unresolved exercises on each access to increase variety while preserving completed ones
+	miuni_randomize_unresolved_exercises($pdo, $userId, $tipoId, 'resta');
+	// Re-fetch exercises so the page shows the freshly randomized unresolved exercises
+	$exercises = miuni_fetch_user_exercises($pdo, $userId, $tipoId);
 	$completed = miuni_count_completed_exercises($exercises);
 	$total = count($exercises);
 } catch (Throwable $e) {

@@ -125,10 +125,19 @@
   checkBtn?.addEventListener('click', checkAnswer);
 
   skipBtn?.addEventListener('click', () => {
-    if (exercise.status && exercise.status !== 'pending') {
+    // Allow returning only if the exercise is correct.
+    if (exercise.status === 'correct') {
       window.location.href = 'restas.php';
       return;
     }
+
+    // If last attempt was incorrect, block returning until corrected or cleared.
+    if (exercise.status === 'incorrect') {
+      showToast('No puedes volver hasta corregir la respuesta o vaciarla.', 'error');
+      return;
+    }
+
+    // Pending or no status: mark pending and allow return.
     markResult('pending').finally(() => {
       window.location.href = 'restas.php';
     });

@@ -22,6 +22,12 @@ try {
 
 	$sumExercises = miuni_ensure_user_exercises($pdo, $userId, $tipoSuma, 4, 'suma');
 	$restExercises = miuni_ensure_user_exercises($pdo, $userId, $tipoResta, 4, 'resta');
+	// Randomize unresolved exercises for both suma and resta on each access (preserve completed ones)
+	miuni_randomize_unresolved_exercises($pdo, $userId, $tipoSuma, 'suma');
+	miuni_randomize_unresolved_exercises($pdo, $userId, $tipoResta, 'resta');
+	// Re-fetch after randomization
+	$sumExercises = miuni_fetch_user_exercises($pdo, $userId, $tipoSuma);
+	$restExercises = miuni_fetch_user_exercises($pdo, $userId, $tipoResta);
 
 	$allExercises = [];
 	foreach ($sumExercises as $exercise) {
