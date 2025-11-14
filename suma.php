@@ -175,7 +175,12 @@ $payload = [
 <body class="min-h-screen flex items-start justify-center p-6" style="background-image:url('assets/games/bgjuegos.png');background-size:cover;background-position:center;background-repeat:no-repeat;background-attachment:fixed;">
   <main class="w-full max-w-5xl mx-auto">
     <header class="mb-4 flex flex-wrap items-center justify-between gap-3 text-white drop-shadow">
-      <a href="sumas.php" class="text-sm bg-emerald-900/80 hover:bg-emerald-900 px-3 py-1 rounded-lg shadow">← Volver a la lista</a>
+      <?php $disableSkip = ($status === 'incorrect'); ?>
+      <?php if ($disableSkip): ?>
+        <span class="text-sm bg-emerald-900/40 px-3 py-1 rounded-lg shadow opacity-60 cursor-not-allowed select-none">← Volver a la lista</span>
+      <?php else: ?>
+        <a href="sumas.php" class="text-sm bg-emerald-900/80 hover:bg-emerald-900 px-3 py-1 rounded-lg shadow">← Volver a la lista</a>
+      <?php endif; ?>
       <div class="flex items-center gap-3 text-xs uppercase tracking-wide">
         <span class="inline-block px-3 py-1 rounded-lg bg-emerald-900/70">Completados <span id="progress-count"><?php echo $completed; ?></span> / <?php echo $total; ?></span>
       </div>
