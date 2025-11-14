@@ -46,11 +46,13 @@ document.addEventListener('DOMContentLoaded', () => {
     clone.setAttribute('data-placed', 'true');
     clone.draggable = true;
 
+    clone.addEventListener('pointerdown', () => playSound('drag'));
+    clone.addEventListener('touchstart', () => playSound('drag'), { passive: true });
+
     clone.addEventListener('dragstart', e => {
       e.dataTransfer.setData('text/instance', iid);
       e.dataTransfer.setData('text/value', val);
       clone.classList.add('dragging');
-      playSound('drag');
       try { e.dataTransfer.setDragImage(clone, clone.width / 2, clone.height / 2); } catch (err) {}
     });
 
@@ -88,6 +90,9 @@ document.addEventListener('DOMContentLoaded', () => {
   let dragSrcEl = null;
 
   digits.forEach(img => {
+    const triggerDragSound = () => playSound('drag');
+    img.addEventListener('pointerdown', triggerDragSound);
+    img.addEventListener('touchstart', triggerDragSound, { passive: true });
     img.addEventListener('dragstart', ev => {
       const val = img.dataset.value || img.alt || '';
       ev.dataTransfer.setData('text/value', val);
@@ -95,7 +100,6 @@ document.addEventListener('DOMContentLoaded', () => {
       dragSrcEl = img;
       try { ev.dataTransfer.setDragImage(img, img.width / 2, img.height / 2); } catch (e) {}
       img.classList.add('dragging');
-      playSound('drag');
     });
 
     img.addEventListener('dragend', () => {
