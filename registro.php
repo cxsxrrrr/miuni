@@ -13,8 +13,13 @@ unset($_SESSION['register_errors'], $_SESSION['register_old'], $_SESSION['flash'
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>MiUni Kids Matemáticas | Registro</title>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
+    :root { --font-sans: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; }
+    body { font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; }
     .backdrop-blur-support { -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
     .glass-bg { background: rgba(255,255,255,0.06); }
 
