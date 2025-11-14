@@ -5,46 +5,31 @@
   const resetBtn = document.getElementById('resetSlots');
   const palette = document.getElementById('number-palette');
   const modalEl = document.getElementById('congratsModal');
-  const boardScaler = document.querySelector('[data-board-scaler]');
-  const boardEl = document.getElementById('board');
+  const boardWrap = document.getElementById('board-wrap');
   const exercise = window.currentExercise || null;
   const getHelpers = () => window.combinadaBoardHelpers || null;
   const messages = window.combinadaMessages || {};
 
-  const BOARD_BASE_WIDTH = 720;
-  const BOARD_BASE_HEIGHT = 420;
+  let baselineHeight = window.innerHeight || 0;
+  // Shift the board relative to the initial viewport so tiles stay aligned with the background artwork.
 
-  const setupBoardScaling = () => {
-    if (!boardScaler || !boardEl) {
+  const updateBoardOffset = () => {
+    if (!boardWrap) {
       return;
     }
-
-    const applyScale = () => {
-      const availableWidth = boardScaler.clientWidth;
-      if (!availableWidth) {
-        return;
-      }
-      const scale = Math.min(availableWidth / BOARD_BASE_WIDTH, 1);
-      boardEl.style.transform = `scale(${scale})`;
-      boardEl.style.transformOrigin = 'top left';
-      boardScaler.style.height = `${(BOARD_BASE_HEIGHT * scale).toFixed(2)}px`;
-      boardScaler.style.visibility = 'visible';
-    };
-
-    const scheduleApply = () => window.requestAnimationFrame(applyScale);
-
-    scheduleApply();
-    window.addEventListener('resize', scheduleApply);
-    window.addEventListener('orientationchange', () => setTimeout(applyScale, 100));
-
-    if (typeof ResizeObserver === 'function') {
-      const observer = new ResizeObserver(scheduleApply);
-      observer.observe(boardScaler);
-      boardScaler.__boardResizeObserver = observer;
-    }
+    const delta = (window.innerHeight || baselineHeight) - baselineHeight;
+    const offset = Math.max(-90, Math.min(220, delta * 0.25));
+    boardWrap.style.transform = `translateY(${offset}px)`;
   };
 
-  setupBoardScaling();
+  const resetBaseline = () => {
+    baselineHeight = window.innerHeight || baselineHeight;
+    setTimeout(updateBoardOffset, 120);
+  };
+
+  updateBoardOffset();
+  window.addEventListener('resize', updateBoardOffset);
+  window.addEventListener('orientationchange', resetBaseline);
 
   if (!exercise) {
     console.warn('No exercise payload found');
