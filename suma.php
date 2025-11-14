@@ -107,24 +107,24 @@ $bottomValues = array_combine($bottomSlots, $bottomDigits);
 
 $slotDefinitions = [
   // Top (arriba)
-  't1' => ['style' => 'left:66%;top:22%;width:48px;height:56px;', 'type' => 'top'],
-  't2' => ['style' => 'left:72%;top:22%;width:48px;height:56px;', 'type' => 'top'],
-  't3' => ['style' => 'left:78%;top:22%;width:48px;height:56px;', 'type' => 'top'],
-  't4' => ['style' => 'left:84%;top:22%;width:48px;height:56px;', 'type' => 'top'],
-  't5' => ['style' => 'left:90%;top:22%;width:48px;height:56px;', 'type' => 'top'],
+  't1' => ['style' => 'left:48%;top:28%;width:48px;height:56px;', 'type' => 'top'],
+  't2' => ['style' => 'left:56%;top:28%;width:48px;height:56px;', 'type' => 'top'],
+  't3' => ['style' => 'left:64%;top:28%;width:48px;height:56px;', 'type' => 'top'],
+  't4' => ['style' => 'left:72%;top:28%;width:48px;height:56px;', 'type' => 'top'],
+  't5' => ['style' => 'left:80%;top:28%;width:48px;height:56px;', 'type' => 'top'],
   // Bottom (abajo)
-  'm1' => ['style' => 'left:66%;top:34%;width:48px;height:64px;', 'type' => 'bottom'],
-  'm2' => ['style' => 'left:72%;top:34%;width:48px;height:64px;', 'type' => 'bottom'],
-  'm3' => ['style' => 'left:78%;top:34%;width:48px;height:64px;', 'type' => 'bottom'],
-  'm4' => ['style' => 'left:84%;top:34%;width:48px;height:64px;', 'type' => 'bottom'],
-  'm5' => ['style' => 'left:90%;top:34%;width:48px;height:64px;', 'type' => 'bottom'],
-  // Respuesta
-  'b1' => ['style' => 'left:66%;top:54%;width:48px;height:56px;', 'type' => 'answer'],
-  'b2' => ['style' => 'left:72%;top:54%;width:48px;height:56px;', 'type' => 'answer'],
-  'b3' => ['style' => 'left:78%;top:54%;width:48px;height:56px;', 'type' => 'answer'],
-  'b4' => ['style' => 'left:84%;top:54%;width:48px;height:56px;', 'type' => 'answer'],
-  'b5' => ['style' => 'left:90%;top:54%;width:48px;height:56px;', 'type' => 'answer'],
-  'b6' => ['style' => 'left:96%;top:54%;width:48px;height:56px;', 'type' => 'answer'],
+  'm1' => ['style' => 'left:48%;top:38%;width:48px;height:64px;', 'type' => 'bottom'],
+  'm2' => ['style' => 'left:56%;top:38%;width:48px;height:64px;', 'type' => 'bottom'],
+  'm3' => ['style' => 'left:64%;top:38%;width:48px;height:64px;', 'type' => 'bottom'],
+  'm4' => ['style' => 'left:72%;top:38%;width:48px;height:64px;', 'type' => 'bottom'],
+  'm5' => ['style' => 'left:80%;top:38%;width:48px;height:64px;', 'type' => 'bottom'],
+  // Respuesta (debajo de la línea)
+  'b1' => ['style' => 'left:48%;top:58%;width:48px;height:56px;', 'type' => 'answer'],
+  'b2' => ['style' => 'left:56%;top:58%;width:48px;height:56px;', 'type' => 'answer'],
+  'b3' => ['style' => 'left:64%;top:58%;width:48px;height:56px;', 'type' => 'answer'],
+  'b4' => ['style' => 'left:72%;top:58%;width:48px;height:56px;', 'type' => 'answer'],
+  'b5' => ['style' => 'left:80%;top:58%;width:48px;height:56px;', 'type' => 'answer'],
+  'b6' => ['style' => 'left:88%;top:58%;width:48px;height:56px;', 'type' => 'answer'],
 ];
 
 $payload = [
@@ -172,7 +172,7 @@ $payload = [
     }
     html, body { height: 100%; }
     body { overflow: hidden; }
-    .board-plus{ position:absolute; left:60%; top:28%; font-size:2rem; color:#ffe4ec; font-weight:700; transform:translateX(-50%); pointer-events:none; }
+    .board-plus{ position:absolute; left:42%; top:36%; font-size:2rem; color:#ffe4ec; font-weight:700; transform:translateX(-50%); pointer-events:none; }
   </style>
 </head>
 <body class="min-h-screen flex items-start justify-center p-6" style="background-image:url('assets/games/bgjuegos.png');background-size:cover;background-position:center;background-repeat:no-repeat;background-attachment:fixed;">
