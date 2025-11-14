@@ -91,6 +91,20 @@
     return Array(padding).fill(null).concat(raw.split(''));
   })();
 
+  // Nueva función para actualizar el estado del botón skip
+  function updateSkipBtn() {
+    if (exercise.status === 'incorrect') {
+      skipBtn?.setAttribute('disabled', 'true');
+      skipBtn?.style.setProperty('opacity', '.5');
+      skipBtn?.style.setProperty('pointer-events', 'none');
+    } else {
+      skipBtn?.removeAttribute('disabled');
+      skipBtn?.style.removeProperty('opacity');
+      skipBtn?.style.removeProperty('pointer-events');
+    }
+  }
+
+  // Modifica checkAnswer para actualizar el botón después de verificar
   const checkAnswer = async () => {
     let allCorrect = true;
 
@@ -116,10 +130,13 @@
       showToast('¡Excelente! Has resuelto la suma correctamente.', 'success');
       checkBtn?.setAttribute('disabled', 'true');
       await markResult('correct', userAnswer);
+      exercise.status = 'correct'; // Actualiza el estado local
     } else {
       showToast('Revisa tu resultado y vuelve a intentarlo.', 'error');
       await markResult('incorrect', userAnswer);
+      exercise.status = 'incorrect'; // Actualiza el estado local
     }
+    updateSkipBtn(); // <-- Actualiza el botón después de verificar
   };
 
   checkBtn?.addEventListener('click', checkAnswer);
@@ -139,26 +156,17 @@
     });
   });
 
-  resetBtn?.addEventListener('click', () => {
+  resetBtn?.addEventListener('click', async () => {
     clearSlots();
     checkBtn?.removeAttribute('disabled');
-    // Habilita el botón skip si estaba deshabilitado
-    skipBtn?.removeAttribute('disabled');
-    skipBtn?.style.removeProperty('opacity');
-    skipBtn?.style.removeProperty('pointer-events');
+    await markResult('pending');
+    exercise.status = 'pending'; // Actualiza el estado local
+    updateSkipBtn(); // <-- Actualiza el botón después de vaciar
     showToast('La respuesta se limpió. ¡Intenta de nuevo!', 'info');
-    markResult('pending');
   });
 
-  if (exercise.status === 'correct') {
-    checkBtn?.setAttribute('disabled', 'true');
-  }
-  // Si el ejercicio está incorrecto, deshabilita skipBtn
-  if (exercise.status === 'incorrect') {
-    skipBtn?.setAttribute('disabled', 'true');
-    skipBtn?.style.opacity = '.5';
-    skipBtn?.style.pointerEvents = 'none';
-  }
+  // Llama a la función al cargar la página
+  updateSkipBtn();
 
   const prefillAnswer = () => {
     if (!exercise.answer) return true;
