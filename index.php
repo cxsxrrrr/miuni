@@ -63,7 +63,7 @@
               <p id="heroDescription" class="text-white/85 max-w-2xl md:max-w-xl mx-auto md:mx-0">Potencia el pensamiento lógico con retos diarios, material manipulativo y actividades guiadas paso a paso pensadas para primaria.</p>
             </div>
             <div class="flex flex-col sm:flex-row items-center sm:items-end md:items-center gap-6 sm:gap-8">
-              <a id="heroCta" href="#" class="px-8 py-3 rounded-full bg-gradient-to-r from-[#3fb886] to-[#208765] text-white font-semibold shadow-xl hover:scale-105 transition-transform">Comenzar ahora</a>
+              <a id="heroCta" href="login.php" class="px-8 py-3 rounded-full bg-gradient-to-r from-[#3fb886] to-[#208765] text-white font-semibold shadow-xl hover:scale-105 transition-transform">Comenzar ahora</a>
               <div class="carousel-dots justify-center md:justify-start" role="tablist" aria-label="Secciones del carrusel">
                 <span class="carousel-dot carousel-dot--active" data-dot="home" role="tab" aria-selected="true" aria-label="Home" tabindex="0"></span>
                 <span class="carousel-dot" data-dot="pricing" role="tab" aria-selected="false" aria-label="Pricing" tabindex="0"></span>
