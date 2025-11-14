@@ -76,52 +76,12 @@
       }
       if (data?.status) {
         exercise.status = data.status;
-        updateNavigationControls(data.status); // <- actualizar UI aquí
       }
       return data;
     } catch (error) {
       console.error(error);
       showToast('No pudimos guardar tu progreso. Intenta de nuevo.', 'info');
       return null;
-    }
-  };
-
-  // Nuevo: sincroniza header/link y skip button según estado
-  const updateNavigationControls = (status) => {
-    const header = document.querySelector('main > header');
-    if (header) {
-      // buscar link con href exacto o por contenido (más robusto)
-      const existingLink = header.querySelector('a[href="sumas.php"]') || Array.from(header.querySelectorAll('a')).find(a => a.textContent.trim().startsWith('← Volver'));
-      const existingSpan = header.querySelector('span.back-disabled');
-
-      if (status === 'incorrect') {
-        if (existingLink && !existingSpan) {
-          const span = document.createElement('span');
-          span.className = existingLink.className + ' back-disabled text-sm bg-emerald-900/40 px-3 py-1 rounded-lg shadow opacity-60 cursor-not-allowed select-none';
-          span.textContent = '← Volver a la lista';
-          existingLink.replaceWith(span);
-        }
-      } else {
-        if (existingSpan) {
-          const a = document.createElement('a');
-          a.href = 'sumas.php';
-          a.className = existingSpan.className.replace(' back-disabled', '') || 'text-sm bg-emerald-900/80 hover:bg-emerald-900 px-3 py-1 rounded-lg shadow';
-          a.textContent = '← Volver a la lista';
-          existingSpan.replaceWith(a);
-        }
-      }
-    }
-
-    if (skipBtn) {
-      if (status === 'incorrect') {
-        skipBtn.setAttribute('disabled', 'true');
-        skipBtn.style.opacity = '.5';
-        skipBtn.style.pointerEvents = 'none';
-      } else {
-        skipBtn.removeAttribute('disabled');
-        skipBtn.style.opacity = '';
-        skipBtn.style.pointerEvents = '';
-      }
     }
   };
 
@@ -164,41 +124,21 @@
 
   checkBtn?.addEventListener('click', checkAnswer);
 
-  // llamar init para sincronizar controles según el estado actual
-  updateNavigationControls(exercise.status);
-
-  // Ajuste: esperar la llamada antes de navegar en skipBtn (ahora await)
-  skipBtn?.addEventListener('click', async () => {
-    if (exercise.status === 'correct') {
+  skipBtn?.addEventListener('click', () => {
+    if (exercise.status && exercise.status !== 'pending') {
       window.location.href = 'sumas.php';
       return;
     }
-    if (exercise.status === 'incorrect') {
-      showToast('No puedes volver hasta corregir la respuesta o vaciarla.', 'error');
-      return;
-    }
-    const data = await markResult('pending');
-    if (data && data.status === 'pending') {
+    markResult('pending').finally(() => {
       window.location.href = 'sumas.php';
-    } else {
-      showToast('No se pudo actualizar el estado. Intenta de nuevo.', 'error');
-    }
+    });
   });
 
-  // Ajuste: no recargar; actualizar el estado en memoria y en UI
-  resetBtn?.addEventListener('click', async () => {
+  resetBtn?.addEventListener('click', () => {
     clearSlots();
     checkBtn?.removeAttribute('disabled');
     showToast('La respuesta se limpió. ¡Intenta de nuevo!', 'info');
-    const data = await markResult('pending');
-    if (data && data.status) {
-      exercise.status = data.status;
-      exercise.answer = null;
-      updateNavigationControls(data.status);
-      // limpiar visualmente cualquier prefill helpers
-      const helpers = getHelpers();
-      helpers?.clearAllSlots?.();
-    }
+    markResult('pending');
   });
 
   if (exercise.status === 'correct') {
