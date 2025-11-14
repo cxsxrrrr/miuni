@@ -19,10 +19,6 @@ try {
   }
 
   $exercises = miuni_ensure_user_exercises($pdo, $userId, $tipoId, 8, 'suma');
-  // Randomize unresolved exercises on each access to increase variety while preserving completed ones
-  miuni_randomize_unresolved_exercises($pdo, $userId, $tipoId, 'suma');
-  // Re-fetch exercises so the page shows the freshly randomized unresolved exercises
-  $exercises = miuni_fetch_user_exercises($pdo, $userId, $tipoId);
   $completed = miuni_count_completed_exercises($exercises);
   $total = count($exercises);
 } catch (Throwable $e) {
@@ -103,7 +99,7 @@ try {
               <p class="text-xs uppercase tracking-wide text-white/80">Ejercicio <?php echo $index + 1; ?></p>
               <p class="text-2xl text-white mt-2 text-right">
                 <span class="block leading-tight"><?php echo number_format($top, 0, '', ' '); ?></span>
-                <span class="block leading-tight">+ <?php echo str_pad((string)$bottom, 2, '0', STR_PAD_LEFT); ?></span>
+                <span class="block leading-tight">+ <?php echo str_pad((string)$bottom, 5, '0', STR_PAD_LEFT); ?></span>
               </p>
             </div>
             <span class="inline-flex items-center justify-center rounded-full w-10 h-10 text-lg shadow <?php echo $statusClasses; ?>"><?php echo $statusIcon; ?></span>
