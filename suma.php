@@ -241,8 +241,15 @@ $payload = [
       <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mt-6">
         <button type="button" id="checkBtn" class="px-5 py-3 rounded-xl bg-emerald-600 text-white font-semibold shadow hover:bg-emerald-700 transition">Verificar resultado</button>
   <button type="button" id="resetSlots" class="px-5 py-3 rounded-xl bg-emerald-900/80 text-white font-semibold shadow hover:bg-emerald-900 transition">Vaciar respuesta</button>
-        <button type="button" id="skipBtn" class="px-5 py-3 rounded-xl bg-rose-600 text-white font-semibold shadow hover:bg-rose-700 transition">Volver a la lista</button>
+        <?php $disableSkip = ($status === 'incorrect'); ?>
+        <button type="button" id="skipBtn" class="px-5 py-3 rounded-xl bg-rose-600 text-white font-semibold shadow hover:bg-rose-700 transition"
+          <?php if ($disableSkip) echo 'disabled style="opacity:.5;pointer-events:none;"'; ?>>
+          Volver a la lista
+        </button>
       </div>
+      <?php if ($disableSkip): ?>
+        <div class="mt-2 text-rose-200 text-sm">Debes responder correctamente o vaciar la respuesta para salir.</div>
+      <?php endif; ?>
 
       <div id="toast" class="fixed right-6 top-6 z-50 max-w-xs hidden"></div>
     </section>
