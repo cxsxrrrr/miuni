@@ -196,7 +196,7 @@ $payload = [
     	}
 		html, body { height: 100%; }
 		body { overflow: hidden; }
-		.board-minus{ position:absolute; left:76%; top:28%; font-size:2rem; color:#ffe4ec; font-weight:700; transform:translateX(-50%); pointer-events:none; }
+		.board-minus{ position:absolute; left:42%; top:36%; font-size:2rem; color:#ffe4ec; font-weight:700; transform:translateX(-50%); pointer-events:none; }
 	</style>
 </head>
 <body class="min-h-screen flex items-start justify-center p-6" style="background-image:url('assets/games/bgjuegos.png');background-size:cover;background-position:center;background-repeat:no-repeat;background-attachment:fixed;">
