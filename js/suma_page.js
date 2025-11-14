@@ -146,18 +146,12 @@
   checkBtn?.addEventListener('click', checkAnswer);
 
   skipBtn?.addEventListener('click', () => {
-    // Si el botón está deshabilitado, muestra el toast y no hace nada
-    if (skipBtn.hasAttribute('disabled')) {
+    // Siempre revisa el estado real antes de permitir salir
+    if (exercise.status === 'incorrect') {
       showToast('Debes responder correctamente o vaciar la respuesta para salir.', 'error');
       return;
     }
-    if (exercise.status && exercise.status !== 'pending') {
-      window.location.href = 'sumas.php';
-      return;
-    }
-    markResult('pending').finally(() => {
-      window.location.href = 'sumas.php';
-    });
+    window.location.href = 'sumas.php';
   });
 
   resetBtn?.addEventListener('click', async () => {
