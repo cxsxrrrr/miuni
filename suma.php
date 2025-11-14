@@ -93,22 +93,17 @@ $bottomSlots = ['m1', 'm2', 'm3', 'm4', 'm5'];
 $answerSlots = ['b1', 'b2', 'b3', 'b4', 'b5', 'b6'];
 
 $topDigits = str_split((string)$top);
-$topValues = array_fill_keys($topSlots, null);
-$ptr = count($topDigits) - 1;
-for ($i = count($topSlots) - 1; $i >= 0; $i--) {
-  $slotId = $topSlots[$i];
-  $topValues[$slotId] = $ptr >= 0 ? $topDigits[$ptr] : null;
-  $ptr--;
+$bottomDigits = str_split((string)$bottom);
+
+if (count($topDigits) !== 5) {
+    $topDigits = str_split(str_pad((string)$top, 5, '0', STR_PAD_LEFT));
+}
+if (count($bottomDigits) !== 5) {
+    $bottomDigits = str_split(str_pad((string)$bottom, 5, '0', STR_PAD_LEFT));
 }
 
-$bottomDigits = str_split(str_pad((string)$bottom, 5, '0', STR_PAD_LEFT)); // ← Cambia a 5 dígitos
-$bottomValues = array_fill_keys($bottomSlots, null);
-$ptr = count($bottomDigits) - 1;
-for ($i = count($bottomSlots) - 1; $i >= 0; $i--) {
-  $slotId = $bottomSlots[$i];
-  $bottomValues[$slotId] = $ptr >= 0 ? $bottomDigits[$ptr] : null;
-  $ptr--;
-}
+$topValues = array_combine($topSlots, $topDigits);
+$bottomValues = array_combine($bottomSlots, $bottomDigits);
 
 $slotDefinitions = [
   't1' => ['style' => 'left:60%;top:10%;width:48px;height:56px;', 'type' => 'top'],
@@ -142,7 +137,8 @@ $payload = [
   'slots' => [
     'answer' => $answerSlots
   ]
-};
+];
+
 ?>
 <!doctype html>
 <html lang="es">
