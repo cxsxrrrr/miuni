@@ -116,22 +116,25 @@ for ($i = count($bottomSlots) - 1; $i >= 0; $i--) {
 }
 
 $slotDefinitions = [
-	't1' => ['style' => 'left:60%;top:10%;width:48px;height:56px;', 'type' => 'top'],
-	't2' => ['style' => 'left:68%;top:10%;width:48px;height:56px;', 'type' => 'top'],
-	't3' => ['style' => 'left:76%;top:10%;width:48px;height:56px;', 'type' => 'top'],
-	't4' => ['style' => 'left:84%;top:10%;width:48px;height:56px;', 'type' => 'top'],
-	't5' => ['style' => 'left:92%;top:10%;width:48px;height:56px;', 'type' => 'top'],
-	'm1' => ['style' => 'left:84%;top:36%;width:48px;height:64px;', 'type' => 'bottom'],
-	'm2' => ['style' => 'left:92%;top:36%;width:48px;height:64px;', 'type' => 'bottom'],
-	'm3' => ['style' => 'left:76%;top:36%;width:48px;height:64px;', 'type' => 'bottom'],
-	'm4' => ['style' => 'left:68%;top:36%;width:48px;height:64px;', 'type' => 'bottom'],
-	'm5' => ['style' => 'left:60%;top:36%;width:48px;height:64px;', 'type' => 'bottom'],
-	'b1' => ['style' => 'left:52%;top:64%;width:48px;height:56px;', 'type' => 'answer'],
-	'b2' => ['style' => 'left:60%;top:64%;width:48px;height:56px;', 'type' => 'answer'],
-	'b3' => ['style' => 'left:68%;top:64%;width:48px;height:56px;', 'type' => 'answer'],
-	'b4' => ['style' => 'left:76%;top:64%;width:48px;height:56px;', 'type' => 'answer'],
-	'b5' => ['style' => 'left:84%;top:64%;width:48px;height:56px;', 'type' => 'answer'],
-	'b6' => ['style' => 'left:92%;top:64%;width:48px;height:56px;', 'type' => 'answer']
+  // Top row
+  't1' => ['style' => 'left:50%;top:10%;width:70px;height:80px;', 'type' => 'top'],
+  't2' => ['style' => 'left:60%;top:10%;width:70px;height:80px;', 'type' => 'top'],
+  't3' => ['style' => 'left:70%;top:10%;width:70px;height:80px;', 'type' => 'top'],
+  't4' => ['style' => 'left:80%;top:10%;width:70px;height:80px;', 'type' => 'top'],
+  't5' => ['style' => 'left:90%;top:10%;width:70px;height:80px;', 'type' => 'top'],
+  // Bottom row
+  'm1' => ['style' => 'left:80%;top:36%;width:70px;height:80px;', 'type' => 'bottom'],
+  'm2' => ['style' => 'left:90%;top:36%;width:70px;height:80px;', 'type' => 'bottom'],
+  'm3' => ['style' => 'left:70%;top:36%;width:70px;height:80px;', 'type' => 'bottom'],
+  'm4' => ['style' => 'left:60%;top:36%;width:70px;height:80px;', 'type' => 'bottom'],
+  'm5' => ['style' => 'left:50%;top:36%;width:70px;height:80px;', 'type' => 'bottom'],
+  // Answer row
+  'b1' => ['style' => 'left:42%;top:64%;width:70px;height:80px;', 'type' => 'answer'],
+  'b2' => ['style' => 'left:52%;top:64%;width:70px;height:80px;', 'type' => 'answer'],
+  'b3' => ['style' => 'left:62%;top:64%;width:70px;height:80px;', 'type' => 'answer'],
+  'b4' => ['style' => 'left:72%;top:64%;width:70px;height:80px;', 'type' => 'answer'],
+  'b5' => ['style' => 'left:82%;top:64%;width:70px;height:80px;', 'type' => 'answer'],
+  'b6' => ['style' => 'left:92%;top:64%;width:70px;height:80px;', 'type' => 'answer']
 ];
 
 $payload = [
@@ -180,6 +183,17 @@ $payload = [
 			#board{ width:100%; height:320px; }
 			#number-palette{ width:120px; }
 		}
+    	.suma-linea {
+    	position: absolute;
+    	left: 32%;
+    	top: 58%;
+    	width: 76%;
+    	height: 0;
+    	border-bottom: 4px solid #fff;
+    	opacity: 0.85;
+    	z-index: 10;
+    	transform: translateX(-2%);
+    	}
 		html, body { height: 100%; }
 		body { overflow: hidden; }
 		.board-minus{ position:absolute; left:76%; top:28%; font-size:2rem; color:#ffe4ec; font-weight:700; transform:translateX(-50%); pointer-events:none; }
@@ -199,16 +213,16 @@ $payload = [
 				<div class="flex items-start gap-6">
 					<div id="number-palette" class="w-40 p-4 bg-transparent">
 						<div class="grid grid-cols-3 gap-4">
-							<img draggable="true" data-value="1" src="assets/games/uno.png" alt="1" class="digit cursor-grab w-12 h-12 mx-auto">
-							<img draggable="true" data-value="2" src="assets/games/dos.png" alt="2" class="digit cursor-grab w-12 h-12 mx-auto">
-							<img draggable="true" data-value="3" src="assets/games/tres.png" alt="3" class="digit cursor-grab w-12 h-12 mx-auto">
-							<img draggable="true" data-value="4" src="assets/games/cuatro.png" alt="4" class="digit cursor-grab w-12 h-12 mx-auto">
-							<img draggable="true" data-value="5" src="assets/games/cinco.png" alt="5" class="digit cursor-grab w-12 h-12 mx-auto">
-							<img draggable="true" data-value="6" src="assets/games/seis.png" alt="6" class="digit cursor-grab w-12 h-12 mx-auto">
-							<img draggable="true" data-value="7" src="assets/games/siete.png" alt="7" class="digit cursor-grab w-12 h-12 mx-auto">
-							<img draggable="true" data-value="8" src="assets/games/ocho.png" alt="8" class="digit cursor-grab w-12 h-12 mx-auto">
-							<img draggable="true" data-value="9" src="assets/games/nueve.png" alt="9" class="digit cursor-grab w-12 h-12 mx-auto">
-							<img draggable="true" data-value="0" src="assets/games/cero.png" alt="0" class="digit cursor-grab w-12 h-12 mx-auto">
+							<img draggable="true" data-value="1" src="assets/games/uno.png" alt="1" class="digit cursor-grab w-20 h-20 mx-auto">
+							<img draggable="true" data-value="2" src="assets/games/dos.png" alt="2" class="digit cursor-grab w-20 h-20 mx-auto">
+							<img draggable="true" data-value="3" src="assets/games/tres.png" alt="3" class="digit cursor-grab w-20 h-20 mx-auto">
+							<img draggable="true" data-value="4" src="assets/games/cuatro.png" alt="4" class="digit cursor-grab w-20 h-20 mx-auto">
+							<img draggable="true" data-value="5" src="assets/games/cinco.png" alt="5" class="digit cursor-grab w-20 h-20 mx-auto">
+							<img draggable="true" data-value="6" src="assets/games/seis.png" alt="6" class="digit cursor-grab w-20 h-20 mx-auto">
+							<img draggable="true" data-value="7" src="assets/games/siete.png" alt="7" class="digit cursor-grab w-20 h-20 mx-auto">
+							<img draggable="true" data-value="8" src="assets/games/ocho.png" alt="8" class="digit cursor-grab w-20 h-20 mx-auto">
+							<img draggable="true" data-value="9" src="assets/games/nueve.png" alt="9" class="digit cursor-grab w-20 h-20 mx-auto">
+							<img draggable="true" data-value="0" src="assets/games/cero.png" alt="0" class="digit cursor-grab w-20 h-20 mx-auto">
 						</div>
 						<div class="mt-2 inline-block px-3 py-1 rounded-lg bg-emerald-900/80 text-sm text-white text-center drop-shadow">Arrastra los numeros a la pizarra</div>
 					</div>
@@ -246,14 +260,16 @@ $payload = [
 									<?php endif; ?>
 								</div>
 							<?php endforeach; ?>
+							 <!-- Línea de suma -->
+              				<div class="suma-linea"></div>
 						</div>
 					</div>
 				</div>
 			</div>
 
 			<div class="flex flex-col sm:flex-row items-center justify-center gap-4 mt-6">
-				<button type="button" id="checkBtn" class="px-5 py-3 rounded-xl bg-emerald-600 text-white font-semibold shadow hover:bg-emerald-700 transition">Verificar resultado</button>
-				<button type="button" id="resetSlots" class="px-5 py-3 rounded-xl bg-emerald-900/80 text-white font-semibold shadow hover:bg-emerald-900 transition">Vaciar respuesta</button>
+				<button type="button" id="checkBtn" class="px-5 py-3 rounded-xl bg-pink-700/85 text-white font-semibold shadow hover:bg-pink-800 transition">Verificar resultado</button>
+				<button type="button" id="resetSlots" class="px-5 py-3 rounded-xl bg-pink-700/85 text-white font-semibold shadow hover:bg-pink-800 transition">Vaciar respuesta</button>
 				<button type="button" id="skipBtn" class="px-5 py-3 rounded-xl bg-rose-600 text-white font-semibold shadow hover:bg-rose-700 transition">Volver a la lista</button>
 			</div>
 
