@@ -29,21 +29,6 @@ try {
 	$sumExercises = miuni_fetch_user_exercises($pdo, $userId, $tipoSuma);
 	$restExercises = miuni_fetch_user_exercises($pdo, $userId, $tipoResta);
 
-	$lockedExerciseId = null;
-	foreach ([$sumExercises, $restExercises] as $group) {
-		foreach ($group as $exercise) {
-			if ((int)$exercise['resuelto'] === 1 && (int)$exercise['correcto'] === 0) {
-				$lockedExerciseId = (int)$exercise['id'];
-				break 2;
-			}
-		}
-	}
-
-	if ($lockedExerciseId !== null) {
-		header('Location: combinada.php?id=' . $lockedExerciseId);
-		exit;
-	}
-
 	$allExercises = [];
 	foreach ($sumExercises as $exercise) {
 		$exercise['operation'] = 'suma';
@@ -121,7 +106,7 @@ try {
 					$statusText = [
 						'pending' => 'Pendiente',
 						'correct' => 'Correcto',
-						'incorrect' => 'Intenta de nuevo'
+						'incorrect' => 'Incorrecto'
 					][$status] ?? 'Pendiente';
 
 					$statusClasses = [
@@ -136,7 +121,7 @@ try {
 						'incorrect' => '⚠'
 					][$status] ?? '⌛';
 
-					$disabled = $status === 'correct';
+					$disabled = $status !== 'pending';
 				?>
 				<a
 					href="combinada.php?id=<?php echo (int)$exercise['id']; ?>"
@@ -156,10 +141,10 @@ try {
 						</div>
 					</div>
 					<p class="mt-4 text-sm text-white">Estado: <?php echo $statusText; ?></p>
-					<?php if ($disabled): ?>
+					<?php if ($status === 'correct'): ?>
 						<p class="mt-2 text-xs text-emerald-200">¡Excelente! Puedes reiniciar para nuevos ejercicios.</p>
 					<?php elseif ($status === 'incorrect'): ?>
-						<p class="mt-2 text-xs text-rose-200">Date otra oportunidad, lo lograrás.</p>
+						<p class="mt-2 text-xs text-rose-200">Quedó marcado como incorrecto y no puede reintentarse.</p>
 					<?php else: ?>
 						<p class="mt-2 text-xs text-white/75">Haz clic para comenzar.</p>
 					<?php endif; ?>

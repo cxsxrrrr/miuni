@@ -21,19 +21,6 @@ try {
   $exercises = miuni_ensure_user_exercises($pdo, $userId, $tipoId, 8, 'suma');
   $completed = miuni_count_completed_exercises($exercises);
   $total = count($exercises);
-
-  $lockedExerciseId = null;
-  foreach ($exercises as $exercise) {
-    if ((int)$exercise['resuelto'] === 1 && (int)$exercise['correcto'] === 0) {
-      $lockedExerciseId = (int)$exercise['id'];
-      break;
-    }
-  }
-
-  if ($lockedExerciseId !== null) {
-    header('Location: suma.php?id=' . $lockedExerciseId);
-    exit;
-  }
 } catch (Throwable $e) {
   $message = 'Error cargando ejercicios: ' . $e->getMessage();
   error_log($message);
@@ -86,7 +73,7 @@ try {
           $statusText = [
             'pending' => 'Pendiente',
             'correct' => 'Correcto',
-            'incorrect' => 'Intenta de nuevo'
+            'incorrect' => 'Incorrecto'
           ][$status] ?? 'Pendiente';
 
           $statusClasses = [
@@ -101,7 +88,7 @@ try {
             'incorrect' => '⚠'
           ][$status] ?? '⌛';
 
-          $disabled = $status === 'correct';
+          $disabled = $status !== 'pending';
         ?>
         <a
           href="suma.php?id=<?php echo (int)$exercise['id']; ?>"
@@ -118,10 +105,10 @@ try {
             <span class="inline-flex items-center justify-center rounded-full w-10 h-10 text-lg shadow <?php echo $statusClasses; ?>"><?php echo $statusIcon; ?></span>
           </div>
           <p class="mt-4 text-sm text-white">Estado: <?php echo $statusText; ?></p>
-          <?php if ($disabled): ?>
+          <?php if ($status === 'correct'): ?>
             <p class="mt-2 text-xs text-emerald-200">¡Bien hecho! Puedes reiniciar para practicar nuevamente.</p>
           <?php elseif ($status === 'incorrect'): ?>
-            <p class="mt-2 text-xs text-rose-200">Vuelve a intentarlo, aún puedes lograrlo.</p>
+            <p class="mt-2 text-xs text-rose-200">Quedó marcado como incorrecto y no puede reintentarse.</p>
           <?php else: ?>
             <p class="mt-2 text-xs text-white/75">Haz clic para comenzar.</p>
           <?php endif; ?>

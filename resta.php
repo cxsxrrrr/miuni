@@ -40,21 +40,6 @@ try {
 		exit;
 	}
 
-	$lockStmt = $pdo->prepare(
-		'SELECT id FROM ejercicios_usuario
-		 WHERE usuario_id = :uid AND tipo_id = :tid AND activo = 1 AND resuelto = 1 AND correcto = 0
-		 LIMIT 1'
-	);
-	$lockStmt->execute([
-		':uid' => $userId,
-		':tid' => $tipoId
-	]);
-	$lockedExerciseId = $lockStmt->fetchColumn();
-	if ($lockedExerciseId && (int)$lockedExerciseId !== (int)$exercise['id']) {
-		header('Location: resta.php?id=' . (int)$lockedExerciseId);
-		exit;
-	}
-
 	$top = (int)$exercise['sumando_uno'];
 	$bottom = (int)$exercise['sumando_dos'];
 	if ($bottom > $top) {
@@ -199,12 +184,7 @@ $payload = [
 <body class="min-h-screen flex items-start justify-center p-6" style="background-image:url('assets/games/bgjuegos.png');background-size:cover;background-position:center;background-repeat:no-repeat;background-attachment:fixed;">
 	<main class="w-full max-w-5xl mx-auto">
 		<header class="mb-4 flex flex-wrap items-center justify-between gap-3 text-white drop-shadow">
-			<?php $disableSkip = ($status === 'incorrect'); ?>
-			<?php if ($disableSkip): ?>
-				<span class="text-sm bg-emerald-900/40 px-3 py-1 rounded-lg shadow opacity-60 cursor-not-allowed select-none">← Volver a la lista</span>
-			<?php else: ?>
-				<a href="restas.php" class="text-sm bg-emerald-900/80 hover:bg-emerald-900 px-3 py-1 rounded-lg shadow">← Volver a la lista</a>
-			<?php endif; ?>
+			<a href="restas.php" class="text-sm bg-emerald-900/80 hover:bg-emerald-900 px-3 py-1 rounded-lg shadow">← Volver a la lista</a>
 			<div class="flex items-center gap-3 text-xs uppercase tracking-wide">
 				<span>Completados <span id="progress-count"><?php echo $completed; ?></span> / <?php echo $total; ?></span>
 			</div>
@@ -270,7 +250,7 @@ $payload = [
 			<div class="flex flex-col sm:flex-row items-center justify-center gap-4 mt-6">
 				<button type="button" id="checkBtn" class="px-5 py-3 rounded-xl bg-emerald-600 text-white font-semibold shadow hover:bg-emerald-700 transition">Verificar resultado</button>
 				<button type="button" id="resetSlots" class="px-5 py-3 rounded-xl bg-emerald-900/80 text-white font-semibold shadow hover:bg-emerald-900 transition">Vaciar respuesta</button>
-				<button type="button" id="skipBtn" class="px-5 py-3 rounded-xl bg-rose-600 text-white font-semibold shadow hover:bg-rose-700 transition"<?php if ($disableSkip) echo ' disabled style="opacity:.5;pointer-events:none;"'; ?>>Volver a la lista</button>
+				<button type="button" id="skipBtn" class="px-5 py-3 rounded-xl bg-rose-600 text-white font-semibold shadow hover:bg-rose-700 transition">Volver a la lista</button>
 			</div>
 
 			<div id="toast" class="fixed right-6 top-6 z-50 max-w-xs hidden"></div>
