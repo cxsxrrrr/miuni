@@ -253,7 +253,7 @@ $payload = [
         </button>
       </div>
       <?php if ($disableSkip): ?>
-        <div class="mt-2 text-rose-200 text-sm">Debes responder correctamente o vaciar la respuesta para salir.</div>
+
       <?php endif; ?>
 
       <div id="toast" class="fixed right-6 top-6 z-50 max-w-xs hidden"></div>

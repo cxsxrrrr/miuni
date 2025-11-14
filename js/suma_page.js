@@ -125,6 +125,11 @@
   checkBtn?.addEventListener('click', checkAnswer);
 
   skipBtn?.addEventListener('click', () => {
+    // Si el botón está deshabilitado, muestra el toast y no hace nada
+    if (skipBtn.hasAttribute('disabled')) {
+      showToast('Debes responder correctamente o vaciar la respuesta para salir.', 'error');
+      return;
+    }
     if (exercise.status && exercise.status !== 'pending') {
       window.location.href = 'sumas.php';
       return;
@@ -137,12 +142,22 @@
   resetBtn?.addEventListener('click', () => {
     clearSlots();
     checkBtn?.removeAttribute('disabled');
+    // Habilita el botón skip si estaba deshabilitado
+    skipBtn?.removeAttribute('disabled');
+    skipBtn?.style.removeProperty('opacity');
+    skipBtn?.style.removeProperty('pointer-events');
     showToast('La respuesta se limpió. ¡Intenta de nuevo!', 'info');
     markResult('pending');
   });
 
   if (exercise.status === 'correct') {
     checkBtn?.setAttribute('disabled', 'true');
+  }
+  // Si el ejercicio está incorrecto, deshabilita skipBtn
+  if (exercise.status === 'incorrect') {
+    skipBtn?.setAttribute('disabled', 'true');
+    skipBtn?.style.opacity = '.5';
+    skipBtn?.style.pointerEvents = 'none';
   }
 
   const prefillAnswer = () => {
