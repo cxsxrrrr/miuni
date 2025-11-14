@@ -13,19 +13,29 @@
   }
 
   const slotOrder = exercise.slots?.answer || ['b1', 'b2', 'b3', 'b4', 'b5', 'b6'];
+  let exitWarningShown = exercise.status === 'incorrect';
 
-  const showToast = (message, tone) => {
+  const toastStyles = {
+    success: { wrapper: 'bg-emerald-50 text-emerald-700', icon: '✔' },
+    error: { wrapper: 'bg-rose-50 text-rose-700', icon: '⚠' },
+    warning: { wrapper: 'bg-amber-50 text-amber-800', icon: '⚠' },
+    info: { wrapper: 'bg-white/95 text-slate-700', icon: 'ℹ' }
+  };
+
+  const showToast = (message, tone = 'info') => {
     if (!toastEl) return;
+    const style = toastStyles[tone] || toastStyles.info;
+    const duration = tone === 'warning' ? 6000 : 4000;
     toastEl.innerHTML = `
-      <div class="flex items-start gap-3 p-4 rounded-xl shadow-lg text-sm ${tone === 'success' ? 'bg-emerald-50 text-emerald-700' : tone === 'error' ? 'bg-rose-50 text-rose-700' : 'bg-white text-slate-700'}">
-        <span class="text-lg">${tone === 'success' ? '✔' : tone === 'error' ? '⚠' : 'ℹ'}</span>
+      <div class="flex items-start gap-3 p-4 rounded-xl shadow-lg text-sm ${style.wrapper}">
+        <span class="text-lg">${style.icon}</span>
         <div class="flex-1">${message}</div>
         <button aria-label="Cerrar" class="ml-2 text-sm" data-toast-close>×</button>
       </div>`;
     toastEl.classList.remove('hidden');
     const closeBtn = toastEl.querySelector('[data-toast-close]');
     closeBtn?.addEventListener('click', () => toastEl.classList.add('hidden'));
-    setTimeout(() => toastEl.classList.add('hidden'), 4000);
+    setTimeout(() => toastEl.classList.add('hidden'), duration);
   };
 
   const getSlotDigit = slotId => {
@@ -66,9 +76,11 @@
   const syncNavigationLock = () => {
     if (!skipBtn) return;
     const locked = exercise.status === 'incorrect';
-    skipBtn.disabled = locked;
-    skipBtn.classList.toggle('opacity-60', locked);
-    skipBtn.classList.toggle('cursor-not-allowed', locked);
+    skipBtn.disabled = false;
+    skipBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+    skipBtn.classList.toggle('ring-2', locked);
+    skipBtn.classList.toggle('ring-offset-2', locked);
+    skipBtn.classList.toggle('ring-rose-400', locked);
   };
 
   const markResult = async (status, answer = null) => {
@@ -147,26 +159,24 @@
       return;
     }
 
-    showToast('Revisa tu resultado y vuelve a intentarlo.', 'error');
+    if (!exitWarningShown) {
+      exitWarningShown = true;
+      showToast('Revisa tu resultado. Si sales ahora, no podrás repetir este ejercicio.', 'warning');
+    } else {
+      showToast('Revisa tu resultado y vuelve a intentarlo.', 'error');
+    }
     await markResult('incorrect', rawAnswer);
   };
 
   checkBtn?.addEventListener('click', checkAnswer);
 
   skipBtn?.addEventListener('click', () => {
-    if (exercise.status === 'correct') {
-      window.location.href = 'restas.php';
+    const redirect = () => { window.location.href = 'restas.php'; };
+    if (exercise.status === 'pending') {
+      markResult('pending').finally(redirect);
       return;
     }
-    if (exercise.status === 'incorrect') {
-      showToast('No puedes volver hasta corregir la respuesta o vaciarla.', 'error');
-      return;
-    }
-    exercise.status = 'pending';
-    syncNavigationLock();
-    markResult('pending').finally(() => {
-      window.location.href = 'restas.php';
-    });
+    redirect();
   });
 
   resetBtn?.addEventListener('click', () => {
