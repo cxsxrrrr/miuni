@@ -123,7 +123,6 @@ $slotDefinitions = [
 	'b5' => ['style' => 'left:84%;top:64%;width:48px;height:56px;', 'type' => 'answer'],
 	'b6' => ['style' => 'left:92%;top:64%;width:48px;height:56px;', 'type' => 'answer']
 ];
-];
 
 $payload = [
   'id' => (int)$exercise['id'],
