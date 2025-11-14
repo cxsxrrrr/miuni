@@ -129,14 +129,18 @@
     if (allCorrect) {
       showToast('¡Excelente! Has resuelto la suma correctamente.', 'success');
       checkBtn?.setAttribute('disabled', 'true');
-      await markResult('correct', userAnswer);
-      exercise.status = 'correct'; // Actualiza el estado local
+      const data = await markResult('correct', userAnswer);
+      if (data?.status) {
+        exercise.status = data.status;
+      }
     } else {
       showToast('Revisa tu resultado y vuelve a intentarlo.', 'error');
-      await markResult('incorrect', userAnswer);
-      exercise.status = 'incorrect'; // Actualiza el estado local
+      const data = await markResult('incorrect', userAnswer);
+      if (data?.status) {
+        exercise.status = data.status;
+      }
     }
-    updateSkipBtn(); // <-- Actualiza el botón después de verificar
+    updateSkipBtn();
   };
 
   checkBtn?.addEventListener('click', checkAnswer);
@@ -159,9 +163,14 @@
   resetBtn?.addEventListener('click', async () => {
     clearSlots();
     checkBtn?.removeAttribute('disabled');
-    await markResult('pending');
-    exercise.status = 'pending'; // Actualiza el estado local
-    updateSkipBtn(); // <-- Actualiza el botón después de vaciar
+    const data = await markResult('pending');
+    // Usa el estado devuelto por el backend si está disponible
+    if (data?.status) {
+      exercise.status = data.status;
+    } else {
+      exercise.status = 'pending';
+    }
+    updateSkipBtn();
     showToast('La respuesta se limpió. ¡Intenta de nuevo!', 'info');
   });
 
