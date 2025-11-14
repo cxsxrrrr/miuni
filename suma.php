@@ -106,22 +106,22 @@ $topValues = array_combine($topSlots, $topDigits);
 $bottomValues = array_combine($bottomSlots, $bottomDigits);
 
 $slotDefinitions = [
-  't1' => ['style' => 'left:60%;top:10%;width:48px;height:56px;', 'type' => 'top'],
-	't2' => ['style' => 'left:68%;top:10%;width:48px;height:56px;', 'type' => 'top'],
-	't3' => ['style' => 'left:76%;top:10%;width:48px;height:56px;', 'type' => 'top'],
-	't4' => ['style' => 'left:84%;top:10%;width:48px;height:56px;', 'type' => 'top'],
-	't5' => ['style' => 'left:92%;top:10%;width:48px;height:56px;', 'type' => 'top'],
-	'm1' => ['style' => 'left:84%;top:36%;width:48px;height:64px;', 'type' => 'bottom'],
-	'm2' => ['style' => 'left:92%;top:36%;width:48px;height:64px;', 'type' => 'bottom'],
-	'm3' => ['style' => 'left:76%;top:36%;width:48px;height:64px;', 'type' => 'bottom'],
-	'm4' => ['style' => 'left:68%;top:36%;width:48px;height:64px;', 'type' => 'bottom'],
-	'm5' => ['style' => 'left:60%;top:36%;width:48px;height:64px;', 'type' => 'bottom'],
-	'b1' => ['style' => 'left:52%;top:64%;width:48px;height:56px;', 'type' => 'answer'],
-	'b2' => ['style' => 'left:60%;top:64%;width:48px;height:56px;', 'type' => 'answer'],
-	'b3' => ['style' => 'left:68%;top:64%;width:48px;height:56px;', 'type' => 'answer'],
-	'b4' => ['style' => 'left:76%;top:64%;width:48px;height:56px;', 'type' => 'answer'],
-	'b5' => ['style' => 'left:84%;top:64%;width:48px;height:56px;', 'type' => 'answer'],
-	'b6' => ['style' => 'left:92%;top:64%;width:48px;height:56px;', 'type' => 'answer']
+  't1' => ['style' => 'left:60%;top:10%;width:70px;height:80px;', 'type' => 'top'],
+	't2' => ['style' => 'left:68%;top:10%;width:70px;height:80px;', 'type' => 'top'],
+	't3' => ['style' => 'left:76%;top:10%;width:70px;height:80px;', 'type' => 'top'],
+	't4' => ['style' => 'left:84%;top:10%;width:70px;height:80px;', 'type' => 'top'],
+	't5' => ['style' => 'left:92%;top:10%;width:70px;height:80px;', 'type' => 'top'],
+	'm1' => ['style' => 'left:84%;top:36%;width:70px;height:80px;', 'type' => 'bottom'],
+	'm2' => ['style' => 'left:92%;top:36%;width:70px;height:80px;', 'type' => 'bottom'],
+	'm3' => ['style' => 'left:76%;top:36%;width:70px;height:80px;', 'type' => 'bottom'],
+	'm4' => ['style' => 'left:68%;top:36%;width:70px;height:80px;', 'type' => 'bottom'],
+	'm5' => ['style' => 'left:60%;top:36%;width:70px;height:80px;', 'type' => 'bottom'],
+	'b1' => ['style' => 'left:52%;top:64%;width:70px;height:80px;', 'type' => 'answer'],
+	'b2' => ['style' => 'left:60%;top:64%;width:70px;height:80px;', 'type' => 'answer'],
+	'b3' => ['style' => 'left:68%;top:64%;width:70px;height:80px;', 'type' => 'answer'],
+	'b4' => ['style' => 'left:76%;top:64%;width:70px;height:80px;', 'type' => 'answer'],
+	'b5' => ['style' => 'left:84%;top:64%;width:70px;height:80px;', 'type' => 'answer'],
+	'b6' => ['style' => 'left:92%;top:64%;width:70px;height:80px;', 'type' => 'answer']
 ];
 
 $payload = [
@@ -158,13 +158,13 @@ $payload = [
     #problem { display:block; }
     #problem .flex { align-items:flex-start; }
     #number-palette{ width:140px; }
-    #number-palette .digit{ width:56px; height:56px; user-select:none; }
+    #number-palette .digit{ width:90px; height:90px; user-select:none; }
     #board{ max-width:820px; height:450px; }
     #number-palette .grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
     .slot{ display:flex; align-items:center; justify-content:center; border-radius:14px; background:rgba(63,99,47,0.38); transform:translateX(-50%); }
     .slot--answer{ cursor:pointer; }
     .slot--static{ pointer-events:none; }
-    .slot--static img{ width:44px; height:44px; object-fit:contain; user-select:none; }
+    .slot--static img{ width:70 px; height:70px; object-fit:contain; user-select:none; }
     .slot--over{ outline:3px solid rgba(255,255,255,0.65); transform:translateX(-50%) scale(1.03); }
     .digit.dragging{ opacity:.6; transform:scale(.95); }
     main > header{ margin-bottom:1rem; }
@@ -191,18 +191,18 @@ $payload = [
         <div class="flex items-start gap-6">
           <div id="number-palette" class="w-40 p-4 bg-transparent">
             <div class="grid grid-cols-3 gap-4">
-              <img draggable="true" data-value="1" src="assets/games/uno.png" alt="1" class="digit cursor-grab w-12 h-12 mx-auto">
-              <img draggable="true" data-value="2" src="assets/games/dos.png" alt="2" class="digit cursor-grab w-12 h-12 mx-auto">
-              <img draggable="true" data-value="3" src="assets/games/tres.png" alt="3" class="digit cursor-grab w-12 h-12 mx-auto">
-              <img draggable="true" data-value="4" src="assets/games/cuatro.png" alt="4" class="digit cursor-grab w-12 h-12 mx-auto">
-              <img draggable="true" data-value="5" src="assets/games/cinco.png" alt="5" class="digit cursor-grab w-12 h-12 mx-auto">
-              <img draggable="true" data-value="6" src="assets/games/seis.png" alt="6" class="digit cursor-grab w-12 h-12 mx-auto">
-              <img draggable="true" data-value="7" src="assets/games/siete.png" alt="7" class="digit cursor-grab w-12 h-12 mx-auto">
-              <img draggable="true" data-value="8" src="assets/games/ocho.png" alt="8" class="digit cursor-grab w-12 h-12 mx-auto">
-              <img draggable="true" data-value="9" src="assets/games/nueve.png" alt="9" class="digit cursor-grab w-12 h-12 mx-auto">
-              <img draggable="true" data-value="0" src="assets/games/cero.png" alt="0" class="digit cursor-grab w-12 h-12 mx-auto">
+              <img draggable="true" data-value="1" src="assets/games/uno.png" alt="1" class="digit cursor-grab w-20 h-20 mx-auto">
+              <img draggable="true" data-value="2" src="assets/games/dos.png" alt="2" class="digit cursor-grab w-20 h-20 mx-auto">
+              <img draggable="true" data-value="3" src="assets/games/tres.png" alt="3" class="digit cursor-grab w-20 h-20 mx-auto">
+              <img draggable="true" data-value="4" src="assets/games/cuatro.png" alt="4" class="digit cursor-grab w-20 h-20 mx-auto">
+              <img draggable="true" data-value="5" src="assets/games/cinco.png" alt="5" class="digit cursor-grab w-20 h-20 mx-auto">
+              <img draggable="true" data-value="6" src="assets/games/seis.png" alt="6" class="digit cursor-grab w-20 h-20 mx-auto">
+              <img draggable="true" data-value="7" src="assets/games/siete.png" alt="7" class="digit cursor-grab w-20 h-20 mx-auto">
+              <img draggable="true" data-value="8" src="assets/games/ocho.png" alt="8" class="digit cursor-grab w-20 h-20 mx-auto">
+              <img draggable="true" data-value="9" src="assets/games/nueve.png" alt="9" class="digit cursor-grab w-20 h-20 mx-auto">
+              <img draggable="true" data-value="0" src="assets/games/cero.png" alt="0" class="digit cursor-grab w-20 h-20 mx-auto">
             </div>
-            <div class="mt-2 inline-block px-3 py-1 rounded-lg bg-emerald-900/85 text-sm text-white text-center drop-shadow">Arrastra los numeros a la pizarra</div>
+            <div class="mt-2 inline-block px-3 py-1 rounded-lg bg-blue-700/85 text-sm text-white text-center drop-shadow">Arrastra los numeros a la pizarra</div>
           </div>
 
           <div id="board-wrap" class="flex-1 flex items-center justify-center" style="position:relative; overflow:visible;">
@@ -244,8 +244,8 @@ $payload = [
       </div>
 
       <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mt-6">
-        <button type="button" id="checkBtn" class="px-5 py-3 rounded-xl bg-emerald-600 text-white font-semibold shadow hover:bg-emerald-700 transition">Verificar resultado</button>
-  <button type="button" id="resetSlots" class="px-5 py-3 rounded-xl bg-emerald-900/80 text-white font-semibold shadow hover:bg-emerald-900 transition">Vaciar respuesta</button>
+        <button type="button" id="checkBtn" class="px-5 py-3 rounded-xl bg-pink-700/85 text-white font-semibold shadow hover:bg-pink-800 transition">Verificar resultado</button>
+  <button type="button" id="resetSlots" class="px-5 py-3 rounded-xl bg-pink-700/85 text-white font-semibold shadow hover:bg-pink-800 transition">Vaciar respuesta</button>
         <button type="button" id="skipBtn" class="px-5 py-3 rounded-xl bg-rose-600 text-white font-semibold shadow hover:bg-rose-700 transition">Volver a la lista</button>
       </div>
 
