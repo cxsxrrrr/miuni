@@ -17,7 +17,7 @@ const contentMap = {
     description:
       'Potencia el pensamiento lógico con retos diarios, material manipulativo y actividades guiadas paso a paso pensadas para primaria.',
     ctaLabel: 'Comenzar ahora',
-    ctaHref: '#learn-more'
+    ctaHref: 'login.php'
   },
   pricing: {
     eyebrow: 'Planes',
