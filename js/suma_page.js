@@ -147,7 +147,9 @@
     clearSlots();
     checkBtn?.removeAttribute('disabled');
     showToast('La respuesta se limpió. ¡Intenta de nuevo!', 'info');
-    markResult('pending');
+    markResult('pending').finally(() => {
+      location.reload();
+    });
   });
 
   if (exercise.status === 'correct') {
