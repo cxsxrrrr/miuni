@@ -106,22 +106,22 @@ $topValues = array_combine($topSlots, $topDigits);
 $bottomValues = array_combine($bottomSlots, $bottomDigits);
 
 $slotDefinitions = [
-  't1' => ['style' => 'left:60%;top:10%;width:48px;height:56px;', 'type' => 'top'],
-  't2' => ['style' => 'left:68%;top:10%;width:48px;height:56px;', 'type' => 'top'],
-  't3' => ['style' => 'left:76%;top:10%;width:48px;height:56px;', 'type' => 'top'],
-  't4' => ['style' => 'left:84%;top:10%;width:48px;height:56px;', 'type' => 'top'],
-  't5' => ['style' => 'left:92%;top:10%;width:48px;height:56px;', 'type' => 'top'],
-  'm1' => ['style' => 'left:60%;top:36%;width:48px;height:64px;', 'type' => 'bottom'],
-  'm2' => ['style' => 'left:68%;top:36%;width:48px;height:64px;', 'type' => 'bottom'],
-  'm3' => ['style' => 'left:76%;top:36%;width:48px;height:64px;', 'type' => 'bottom'],
-  'm4' => ['style' => 'left:84%;top:36%;width:48px;height:64px;', 'type' => 'bottom'],
-  'm5' => ['style' => 'left:92%;top:36%;width:48px;height:64px;', 'type' => 'bottom'],
-  'b1' => ['style' => 'left:52%;top:64%;width:48px;height:56px;', 'type' => 'answer'],
-  'b2' => ['style' => 'left:60%;top:64%;width:48px;height:56px;', 'type' => 'answer'],
-  'b3' => ['style' => 'left:68%;top:64%;width:48px;height:56px;', 'type' => 'answer'],
-  'b4' => ['style' => 'left:76%;top:64%;width:48px;height:56px;', 'type' => 'answer'],
-  'b5' => ['style' => 'left:84%;top:64%;width:48px;height:56px;', 'type' => 'answer'],
-  'b6' => ['style' => 'left:92%;top:64%;width:48px;height:56px;', 'type' => 'answer']
+  't1' => ['style' => 'left:36%;top:22%;width:48px;height:56px;', 'type' => 'top'],
+  't2' => ['style' => 'left:48%;top:22%;width:48px;height:56px;', 'type' => 'top'],
+  't3' => ['style' => 'left:60%;top:22%;width:48px;height:56px;', 'type' => 'top'],
+  't4' => ['style' => 'left:72%;top:22%;width:48px;height:56px;', 'type' => 'top'],
+  't5' => ['style' => 'left:84%;top:22%;width:48px;height:56px;', 'type' => 'top'],
+  'm1' => ['style' => 'left:36%;top:34%;width:48px;height:64px;', 'type' => 'bottom'],
+  'm2' => ['style' => 'left:48%;top:34%;width:48px;height:64px;', 'type' => 'bottom'],
+  'm3' => ['style' => 'left:60%;top:34%;width:48px;height:64px;', 'type' => 'bottom'],
+  'm4' => ['style' => 'left:72%;top:34%;width:48px;height:64px;', 'type' => 'bottom'],
+  'm5' => ['style' => 'left:84%;top:34%;width:48px;height:64px;', 'type' => 'bottom'],
+  'b1' => ['style' => 'left:28%;top:64%;width:48px;height:56px;', 'type' => 'answer'],
+  'b2' => ['style' => 'left:40%;top:64%;width:48px;height:56px;', 'type' => 'answer'],
+  'b3' => ['style' => 'left:52%;top:64%;width:48px;height:56px;', 'type' => 'answer'],
+  'b4' => ['style' => 'left:64%;top:64%;width:48px;height:56px;', 'type' => 'answer'],
+  'b5' => ['style' => 'left:76%;top:64%;width:48px;height:56px;', 'type' => 'answer'],
+  'b6' => ['style' => 'left:88%;top:64%;width:48px;height:56px;', 'type' => 'answer']
 ];
 
 $payload = [
