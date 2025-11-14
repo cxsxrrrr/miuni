@@ -55,6 +55,28 @@
     return joined.length ? joined : null;
   };
 
+  const normalizeNumericString = (value) => {
+    if (value === null || value === undefined) {
+      return null;
+    }
+    const sanitized = String(value).replace(/[^0-9]/g, '');
+    if (!sanitized.length) {
+      return null;
+    }
+    const trimmed = sanitized.replace(/^0+/, '');
+    return trimmed === '' ? '0' : trimmed;
+  };
+
+  const targetValue = normalizeNumericString(exercise.difference);
+
+  const syncNavigationLock = () => {
+    if (!skipBtn) return;
+    const locked = exercise.status === 'incorrect';
+    skipBtn.disabled = locked;
+    skipBtn.classList.toggle('opacity-60', locked);
+    skipBtn.classList.toggle('cursor-not-allowed', locked);
+  };
+
   const markResult = async (status, answer = null) => {
     try {
       const payload = { exerciseId: exercise.id, status };
@@ -76,6 +98,7 @@
       }
       if (data?.status) {
         exercise.status = data.status;
+        syncNavigationLock();
       }
       return data;
     } catch (error) {
@@ -85,78 +108,56 @@
     }
   };
 
-  const expectedDigits = (() => {
-    const raw = String(exercise.difference);
-    const padding = Math.max(0, slotOrder.length - raw.length);
-    return Array(padding).fill(null).concat(raw.split(''));
-  })();
-
   const checkAnswer = async () => {
-    let allCorrect = true;
-    let isComplete = true;
-    let hasError = false;
+    const digits = slotOrder.map(slotId => getSlotDigit(slotId));
+    const firstFilledIndex = digits.findIndex(digit => digit !== null);
 
-    slotOrder.forEach((slotId, index) => {
-      const expected = expectedDigits[index];
-      const value = getSlotDigit(slotId);
-
-      if (expected === null) {
-      if (value !== null) {
-        allCorrect = false;
-        hasError = true;
-      }
-      return;
-      }
-
-      if (value === null) {
-      allCorrect = false;
-      isComplete = false;
-      return;
-      }
-
-      if (value !== expected) {
-      allCorrect = false;
-      hasError = true;
-      }
-    });
-
-    const userAnswer = collectAnswer();
-
-    if (!isComplete) {
+    if (firstFilledIndex === -1) {
       showToast('Completa la respuesta antes de verificar.', 'info');
       await markResult('pending');
       return;
     }
 
-    if (allCorrect) {
-      showToast('¡Excelente! Has resuelto la resta correctamente.', 'success');
-      checkBtn?.setAttribute('disabled', 'true');
-      await markResult('correct', userAnswer);
+    const relevantDigits = digits.slice(firstFilledIndex);
+    if (relevantDigits.some(digit => digit === null)) {
+      showToast('Completa la respuesta antes de verificar.', 'info');
+      await markResult('pending');
       return;
     }
 
-    if (hasError) {
-      showToast('Revisa tu resultado y vuelve a intentarlo.', 'error');
-      await markResult('incorrect', userAnswer);
+    const rawAnswer = relevantDigits.join('');
+    const normalizedAnswer = normalizeNumericString(rawAnswer);
+
+    if (normalizedAnswer === null || targetValue === null) {
+      showToast('Completa la respuesta antes de verificar.', 'info');
+      await markResult('pending');
+      return;
     }
+
+    if (normalizedAnswer === targetValue) {
+      showToast('¡Excelente! Has resuelto la resta correctamente.', 'success');
+      checkBtn?.setAttribute('disabled', 'true');
+      await markResult('correct', rawAnswer);
+      return;
+    }
+
+    showToast('Revisa tu resultado y vuelve a intentarlo.', 'error');
+    await markResult('incorrect', rawAnswer);
   };
 
   checkBtn?.addEventListener('click', checkAnswer);
 
   skipBtn?.addEventListener('click', () => {
-    // Allow returning only if the exercise is correct.
     if (exercise.status === 'correct') {
       window.location.href = 'restas.php';
       return;
     }
-
-    // If last attempt was incorrect, block returning until corrected or cleared.
     if (exercise.status === 'incorrect') {
       showToast('No puedes volver hasta corregir la respuesta o vaciarla.', 'error');
       return;
     }
-
-    // Pending or no status: mark pending and allow return.
+    exercise.status = 'pending';
+    syncNavigationLock();
     markResult('pending').finally(() => {
       window.location.href = 'restas.php';
     });
@@ -165,6 +166,8 @@
   resetBtn?.addEventListener('click', () => {
     clearSlots();
     checkBtn?.removeAttribute('disabled');
+    exercise.status = 'pending';
+    syncNavigationLock();
     showToast('La respuesta se limpió. ¡Intenta de nuevo!', 'info');
     markResult('pending');
   });
@@ -172,6 +175,8 @@
   if (exercise.status === 'correct') {
     checkBtn?.setAttribute('disabled', 'true');
   }
+
+  syncNavigationLock();
 
   const prefillAnswer = () => {
     if (!exercise.answer) return true;
