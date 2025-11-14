@@ -94,7 +94,7 @@ $digitImages = [
 ];
 
 $topSlots = ['t1', 't2', 't3', 't4', 't5'];
-$bottomSlots = ['m1', 'm2'];
+$bottomSlots = ['m1', 'm2', 'm3', 'm4', 'm5'];
 $answerSlots = ['b1', 'b2', 'b3', 'b4', 'b5', 'b6'];
 
 $topDigits = str_split((string)$top);
@@ -106,7 +106,7 @@ for ($i = count($topSlots) - 1; $i >= 0; $i--) {
 	$ptr--;
 }
 
-$bottomDigits = str_split(str_pad((string)$bottom, 2, '0', STR_PAD_LEFT));
+$bottomDigits = str_split(str_pad((string)$bottom, 5, '0', STR_PAD_LEFT));
 $bottomValues = array_fill_keys($bottomSlots, null);
 $ptr = count($bottomDigits) - 1;
 for ($i = count($bottomSlots) - 1; $i >= 0; $i--) {
@@ -123,6 +123,9 @@ $slotDefinitions = [
 	't5' => ['style' => 'left:92%;top:10%;width:48px;height:56px;', 'type' => 'top'],
 	'm1' => ['style' => 'left:84%;top:36%;width:48px;height:64px;', 'type' => 'bottom'],
 	'm2' => ['style' => 'left:92%;top:36%;width:48px;height:64px;', 'type' => 'bottom'],
+	'm3' => ['style' => 'left:76%;top:36%;width:48px;height:64px;', 'type' => 'bottom'],
+	'm4' => ['style' => 'left:68%;top:36%;width:48px;height:64px;', 'type' => 'bottom'],
+	'm5' => ['style' => 'left:60%;top:36%;width:48px;height:64px;', 'type' => 'bottom'],
 	'b1' => ['style' => 'left:52%;top:64%;width:48px;height:56px;', 'type' => 'answer'],
 	'b2' => ['style' => 'left:60%;top:64%;width:48px;height:56px;', 'type' => 'answer'],
 	'b3' => ['style' => 'left:68%;top:64%;width:48px;height:56px;', 'type' => 'answer'],
