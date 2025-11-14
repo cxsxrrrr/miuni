@@ -413,3 +413,32 @@ if (!function_exists('miuni_count_completed_exercises')) {
         return $completed;
     }
 }
+
+if (!function_exists('miuni_get_or_create_tipo_id')) {
+    function miuni_get_or_create_tipo_id(PDO $pdo, string $nombre): int
+    {
+        $tipoStmt = $pdo->prepare('SELECT tipo_id FROM tipos_operacion WHERE nombre = :nombre LIMIT 1');
+        $tipoStmt->execute([':nombre' => $nombre]);
+        $tipoId = $tipoStmt->fetchColumn();
+
+        if ($tipoId !== false) {
+            return (int)$tipoId;
+        }
+
+        try {
+            $insertTipo = $pdo->prepare('INSERT INTO tipos_operacion (nombre) VALUES (:nombre)');
+            $insertTipo->execute([':nombre' => $nombre]);
+            return (int)$pdo->lastInsertId();
+        } catch (PDOException $insertException) {
+            if ((int)($insertException->errorInfo[1] ?? 0) === 1062) {
+                $tipoStmt->execute([':nombre' => $nombre]);
+                $tipoId = $tipoStmt->fetchColumn();
+                if ($tipoId !== false) {
+                    return (int)$tipoId;
+                }
+            }
+
+            throw $insertException;
+        }
+    }
+}
