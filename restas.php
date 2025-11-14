@@ -51,7 +51,7 @@ try {
 		<header class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8 text-white">
 			<div>
 				<h1 class="text-3xl font-extrabold text-emerald-700">Ejercicios de Resta</h1>
-				<p class="mt-2 text-sm font-semibold text-emerald-600">Selecciona un ejercicio para resolverlo mediante arrastre de números.</p>
+				<p class="mt-2 text-sm font-semibold text-emerald-600">Selecciona un ejercicio para resolverlo mediante arrastre de numeros.</p>
 			</div>
 			<div class="flex items-center gap-3">
 				<span class="px-3 py-1 rounded-full bg-emerald-900/80 text-white text-sm font-semibold shadow">Completados: <?php echo $completed; ?>/<?php echo $total; ?></span>

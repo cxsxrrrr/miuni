@@ -108,7 +108,12 @@ require_login();
   <main class="max-w-4xl w-full">
     <header class="mb-6 flex items-center justify-between">
       <h1 class="text-3xl font-extrabold text-rose-800">Ejercicios · MiUniKids</h1>
-      <a href="../index.php" class="text-sm text-rose-600 hover:underline">Cerrar sesión</a>
+      <a
+        href="../index.php"
+        class="inline-flex items-center gap-1.5 rounded-full bg-rose-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-rose-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2"
+      >
+        Cerrar sesion
+      </a>
     </header>
 
     <section class="carousel" aria-label="Ejercicios disponibles">
@@ -116,7 +121,7 @@ require_login();
       <article class="carousel-slide">
         <a href="sumas.php" class="option-card block h-full p-8 transition transform">
         <h2>Suma: 5 dígitos + 2 cifras</h2>
-        <p>Practica sumas con números grandes, paso a paso.</p>
+        <p>Practica sumas con numeros grandes, paso a paso.</p>
         </a>
       </article>
       <article class="carousel-slide">
